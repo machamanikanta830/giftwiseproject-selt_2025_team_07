@@ -1,6 +1,8 @@
 <div class="min-h-screen bg-[#f5f5fb]">
+  <!-- NAVBAR -->
   <header class="w-full bg-white shadow-sm">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+      <!-- Logo -->
       <div class="flex items-center gap-2">
         <div class="w-9 h-9 rounded-2xl bg-[#f4e6ff] flex items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg"
@@ -21,6 +23,7 @@
         <span class="text-xl font-semibold tracking-tight">GiftWise</span>
       </div>
 
+      <!-- Right side -->
       <nav class="flex items-center gap-6 text-sm font-medium">
         <span class="text-gray-700">Welcome, <%= current_user.name %>!</span>
         <%= button_to "Log Out", logout_path, method: :delete,
@@ -29,6 +32,7 @@
     </div>
   </header>
 
+  <!-- MAIN CONTENT -->
   <div class="max-w-6xl mx-auto px-6 py-12">
     <h1 class="text-4xl font-semibold mb-8">Dashboard</h1>
 
@@ -49,6 +53,7 @@
             </svg>
           <% end %>
         </div>
+
         <p class="text-3xl font-bold text-[#a855f7]"><%= current_user.events.count %></p>
       </div>
 

@@ -15,6 +15,11 @@ class Event < ApplicationRecord
     event_recipients.includes(:recipient)
   end
 
+  def days_until
+    return nil unless event_date
+    (event_date - Date.current).to_i
+  end
+
   private
 
   def event_date_cannot_be_in_past
