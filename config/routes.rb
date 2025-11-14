@@ -9,6 +9,6 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy"
 
   get "dashboard", to: "dashboard#index"
-
+  resources :recipients, only: [:new, :create]
   get "up" => "rails/health#show", as: :rails_health_check
 end

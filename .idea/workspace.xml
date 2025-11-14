@@ -5,9 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="39dff2d9-821d-4be5-af2c-996431bdcc91" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/giftwiseproject-selt_2025_team_07.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/giftwiseproject-selt_2025_team_07.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/C:/Users/Acer/AppData/Local/JetBrains/RubyMine2025.2/projects/giftwiseproject-selt_2025_team_07.f80d3941/rbs_collection/giftwiseproject_selt_2025_team_07/rbs_collection.lock.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/C:/Users/Acer/AppData/Local/JetBrains/RubyMine2025.2/projects/giftwiseproject-selt_2025_team_07.f80d3941/rbs_collection/giftwiseproject_selt_2025_team_07/rbs_collection.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Procfile.dev" beforeDir="false" afterPath="$PROJECT_DIR$/Procfile.dev" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/assets/config/manifest.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/config/manifest.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/dashboard_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/dashboard_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/dashboard/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/dashboard/index.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/layouts/application.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/application.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/dev" beforeDir="false" afterPath="$PROJECT_DIR$/bin/dev" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/migrate/20251113172739_create_recipients.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/migrate/20251113172739_create_recipients.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,12 +32,12 @@
     &quot;assignee&quot;: &quot;yashwanthmogili&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:hjmjohnsonSELT2025/giftwiseproject-selt_2025_team_07.git&quot;,
-    &quot;accountId&quot;: &quot;86015eb7-2cbf-49fc-b435-c8277e41f21e&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:hjmjohnsonSELT2025/giftwiseproject-selt_2025_team_07.git",
+    "accountId": "414fe92b-bccc-4879-8027-ec354ecb340a"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -45,8 +54,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "com.intellij.lang.ruby.rbs.tools.collection.workspace.sync.RbsCollectionUpdateProjectActivity#LAST_UPDATE_TIMESTAMP": "1763102782601",
-    "git-widget-placeholder": "login/signup",
+    "com.intellij.lang.ruby.rbs.tools.collection.workspace.sync.RbsCollectionUpdateProjectActivity#LAST_UPDATE_TIMESTAMP": "1763103731690",
+    "git-widget-placeholder": "origin/login/signup",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,6 +66,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\akshi\Desktop\SELT\Project\giftwiseproject-selt_2025_team_07\app\views" />
+    </key>
+  </component>
   <component name="RunManager" selected="Rails.giftwiseproject-selt_2025_team_07">
     <configuration name="giftwiseproject-selt_2025_team_07" type="RailsRunConfigurationType" factoryName="Rails">
       <module name="giftwiseproject-selt_2025_team_07" />
@@ -136,6 +150,7 @@
       <updated>1763069717147</updated>
       <workItem from="1763069718605" duration="18479000" />
       <workItem from="1763102703204" duration="413000" />
+      <workItem from="1763103665996" duration="7815000" />
     </task>
     <servers />
   </component>
