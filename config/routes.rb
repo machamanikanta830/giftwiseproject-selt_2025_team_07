@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboard#index"
 
    resources :events
-
+   resources :recipients
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
