@@ -75,15 +75,25 @@
         </div>
 
         <div class="flex gap-2">
-          <%= link_to edit_event_path(@event), class: "px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 text-sm font-medium transition" do %>
-            Edit
-          <% end %>
-          <%= button_to event_path(@event), method: :delete,
+          <!-- Add Recipients (jumps to recipients section on edit form) -->
+          <%= link_to "Add Recipients",
+                      edit_event_path(@event, anchor: "recipients"),
+                      class: "px-4 py-2 rounded-full bg-[#a855f7] text-white text-sm font-medium hover:bg-[#9333ea] transition" %>
+
+          <!-- Edit whole event -->
+          <%= link_to "Edit Event",
+                      edit_event_path(@event),
+                      class: "px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 text-sm font-medium transition" %>
+
+          <!-- Delete -->
+          <%= button_to event_path(@event),
+                        method: :delete,
                         data: { confirm: "Are you sure you want to delete this event?" },
                         class: "px-4 py-2 rounded-full bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium transition" do %>
             Delete
           <% end %>
         </div>
+
       </div>
 
       <% if @event.description.present? %>

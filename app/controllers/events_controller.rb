@@ -5,6 +5,8 @@ class EventsController < ApplicationController
   def index
     @upcoming_events = current_user.events.upcoming
     @past_events = current_user.events.past
+
+    @event = current_user.events.build
   end
 
   def new
@@ -43,12 +45,25 @@ class EventsController < ApplicationController
 
   def update
     if @event.update(event_params)
+      # Update recipients if some were submitted
+      if params[:recipient_ids]
+        @event.event_recipients.destroy_all
+
+        params[:recipient_ids].reject(&:blank?).each do |recipient_id|
+          @event.event_recipients.create(
+            recipient_id: recipient_id,
+            user_id: current_user.id
+          )
+        end
+      end
+
       redirect_to event_path(@event), notice: "Event updated successfully!"
     else
       @recipients = current_user.recipients
       render :edit, status: :unprocessable_entity
     end
   end
+
 
   def destroy
     event_name = @event.event_name
