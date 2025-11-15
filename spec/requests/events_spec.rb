@@ -5,7 +5,7 @@ RSpec.describe "/events", type: :request do
     User.create!(
       name: "Test User",
       email: "user@example.com",
-      password: "password"
+      password: "Password!23"
     )
   end
 

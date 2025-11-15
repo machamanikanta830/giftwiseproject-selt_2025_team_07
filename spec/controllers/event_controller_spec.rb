@@ -2,9 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe EventsController, type: :controller do
-  let(:user) { User.create!(name: "Test User", email: "test@example.com", password: "password123") }
-  let(:other_user) { User.create!(name: "Other User", email: "other@example.com", password: "password123") }
-
+  let(:user) { User.create!(name: "Test User", email: "test@example.com", password: "Password@123") }
+  let(:other_user) { User.create!(name: "Other User", email: "other@example.com", password: "Password@123") }
   let(:event) do
     Event.create!(
       user: user,

@@ -5,7 +5,7 @@ RSpec.describe Event, type: :model do
     User.create!(
       name:  "Test User",
       email: "user@example.com",
-      password: "password"
+      password: "Password@123"
     )
   end
 
@@ -60,7 +60,7 @@ RSpec.describe Event, type: :model do
       event = Event.new(
         user: user,
         event_name: "Test",
-        event_date: Date.today + 7
+        event_date: Date.current + 7
       )
 
       expect(event.days_until).to eq 7
