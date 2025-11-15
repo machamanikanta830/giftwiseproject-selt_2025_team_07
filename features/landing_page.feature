@@ -4,7 +4,8 @@ Feature: Public Landing Page
   So that I can understand the product and get started
 
   Background:
-    When I visit the home page
+    Given I am on the home page
+
 
   Scenario: Hero copy and CTAs are visible
     Then I should see "Find the Perfect"

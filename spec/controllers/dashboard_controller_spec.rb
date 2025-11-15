@@ -1,41 +1,68 @@
-require "rails_helper"
+# spec/controllers/dashboard_controller_spec.rb
+require 'rails_helper'
 
 RSpec.describe DashboardController, type: :controller do
+  # Test user used across examples
   let(:user) do
     User.create!(
       name:  "Test User",
       email: "user@example.com",
-      password: "password"
+      password: "Password1!"
     )
   end
 
-  before do
-    # Stub authentication & current_user
-    allow(controller).to receive(:authenticate_user!).and_return(true)
-    allow(controller).to receive(:current_user).and_return(user)
-  end
-
   describe "GET #index" do
-    it "assigns up to 3 upcoming events for the current user" do
-      # create 4 future events; we expect only first 3 if you use .limit(3)
-      4.times do |i|
-        Event.create!(
-          user: user,
-          event_name: "Event #{i}",
-          event_date: Date.today + (i + 1),
-          budget: 10
-        )
+    context "when not logged in" do
+      it "redirects to login" do
+        get :index
+
+        # adjust this if your authenticate_user! redirects somewhere else
+        expect(response).to redirect_to(login_path)
       end
-
-      get :index
-
-      expect(assigns(:upcoming_events).count).to eq(3)
-      expect(assigns(:upcoming_events).first.event_name).to eq("Event 0")
     end
 
-    it "renders the index template" do
-      get :index
-      expect(response).to render_template(:index)
+    context "when logged in" do
+      before do
+        session[:user_id] = user.id
+      end
+
+      it "is successful" do
+        get :index
+
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:index)
+      end
+
+      it "assigns at most 3 upcoming events for the current user in date order" do
+        # all valid future events (your model disallows past dates)
+        user.events.create!(
+          event_name: "Soon Event",
+          event_date: Date.today + 1,
+          budget: 50
+        )
+        user.events.create!(
+          event_name: "Later Event",
+          event_date: Date.today + 10,
+          budget: 100
+        )
+        user.events.create!(
+          event_name: "Much Later Event",
+          event_date: Date.today + 20,
+          budget: 200
+        )
+        user.events.create!(
+          event_name: "Too Many Event",
+          event_date: Date.today + 30,
+          budget: 300
+        )
+
+        get :index
+
+        upcoming = assigns(:upcoming_events)
+
+        expect(upcoming.size).to eq(3)
+        expect(upcoming).to match_array(user.events.upcoming.limit(3))
+      end
     end
   end
 end

@@ -1,16 +1,17 @@
+
 Feature: Dashboard and events overview
   As a logged in user
   I want to see my upcoming events on the dashboard
   So that I can quickly jump to the event details or see all events
 
   Background:
-    Given a user exists with email "user@example.com" and password "password"
+    Given a user exists with email "user@example.com" and password "Password1!"
     And that user has the following events:
       | event_name       | event_date  | budget | location   |
       | Anniversary      | 2025-11-19  | 150    | Restaurant |
       | Mom's Birthday   | 2025-12-14  | 80     | Home       |
       | Old Event        | 2024-01-01  | 20     | Home       |
-    And I am logged in as "user@example.com" with password "password"
+    And I am logged in as "user@example.com" with password "Password1!"
 
   Scenario: Dashboard shows upcoming events
     When I visit the dashboard
