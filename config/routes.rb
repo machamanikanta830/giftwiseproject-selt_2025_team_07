@@ -1,27 +1,30 @@
 Rails.application.routes.draw do
-  get 'profiles/edit'
-  get 'profiles/update'
   root "home#index"
 
-  get "signup", to: "registrations#new"
+  get  "signup", to: "registrations#new"
   post "signup", to: "registrations#create"
 
-  get "login", to: "sessions#new"
-  post "login", to: "sessions#create"
-  get "logout", to: "sessions#destroy"
+  get    "login",  to: "sessions#new"
+  post   "login",  to: "sessions#create"
   delete "logout", to: "sessions#destroy"
+  get    "logout", to: "sessions#destroy"
 
   get "dashboard", to: "dashboard#index"
+
   resource :profile, only: [:edit, :update]
 
+  resource :password, only: [:edit, :update]
 
-   resources :recipients
+  get "/password/edit",   to: "passwords#edit"
+  get "/password/update", to: "passwords#edit"
+  get "/passwords/edit",   to: "passwords#edit"
+  get "/passwords/update", to: "passwords#edit"
+
+  resources :recipients
 
   resources :events do
     member do
-      # Add a recipient to the event
       post :add_recipient
-      # Remove a recipient from the event
       delete :remove_recipient
     end
   end
