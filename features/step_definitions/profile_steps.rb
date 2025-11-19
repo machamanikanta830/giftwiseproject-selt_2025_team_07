@@ -10,3 +10,6 @@ When('I visit the edit profile page') do
   visit edit_profile_path
 end
 
+Given("I am on the change password page") do
+  visit edit_password_path
+end

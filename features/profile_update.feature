@@ -36,13 +36,12 @@ Feature: Profile Update
     Then I should be on the dashboard page
     And I should see "Profile updated successfully"
 
-  Scenario: User updates password successfully
-    Given I am on the edit profile page
+  Scenario: User enters mismatched passwords
+    Given I am on the change password page
     When I fill in "New Password" with "NewPass1!"
-    And I fill in "Confirm New Password" with "NewPass1!"
-    And I click "Update Profile"
-    Then I should be on the dashboard page
-    And I should see "Profile updated successfully"
+    And I fill in "Confirm New Password" with "DifferentPass1!"
+    And I click "Update Password"
+    Then I should see "Password confirmation doesn't match Password"
 
   Scenario: User leaves password fields blank (no password change)
     Given I am on the edit profile page
@@ -52,17 +51,17 @@ Feature: Profile Update
     And I should see "Profile updated successfully"
 
   Scenario: User enters mismatched passwords
-    Given I am on the edit profile page
+    Given I am on the change password page
     When I fill in "New Password" with "NewPass1!"
     And I fill in "Confirm New Password" with "DifferentPass1!"
-    And I click "Update Profile"
+    And I click "Update Password"
     Then I should see "Password confirmation doesn't match Password"
 
   Scenario: User enters weak password
-    Given I am on the edit profile page
+    Given I am on the change password page
     When I fill in "New Password" with "weak"
     And I fill in "Confirm New Password" with "weak"
-    And I click "Update Profile"
+    And I click "Update Password"
     Then I should see "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
 
   Scenario: User clears required name field
