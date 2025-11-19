@@ -15,8 +15,6 @@ Rails.application.routes.draw do
 
   resource :password, only: [:edit, :update]
 
-  get "/password/edit",   to: "passwords#edit"
-  get "/password/update", to: "passwords#edit"
   get "/passwords/edit",   to: "passwords#edit"
   get "/passwords/update", to: "passwords#edit"
 

@@ -63,7 +63,6 @@ Feature: Event Management
     And I click "Create Event" button
     Then the event "Dinner Party" should have budget "499.99"
 
-
   Scenario: Create event with special characters in name
     Given I am on the new event page
     When I fill in "Event Name" with "Mom's B'day @ Home! "
@@ -216,12 +215,3 @@ Feature: Event Management
     And I visit the events page
     When I click on "← Back to Dashboard"
     Then I should be on the dashboard page
-
-
-
-
-
-
-
-
-

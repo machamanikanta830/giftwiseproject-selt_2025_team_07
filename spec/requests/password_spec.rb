@@ -10,6 +10,7 @@ RSpec.describe "Passwords", type: :request do
   end
 
   before do
+    # however you log in in request specs
     post login_path, params: { email: user.email, password: "Password1!" }
   end
 
