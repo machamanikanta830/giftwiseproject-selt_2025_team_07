@@ -6,14 +6,14 @@ class ProfilesController < ApplicationController
   end
 
   def update
-    user_params = profile_params
+    attrs = profile_params.dup
 
-    if user_params[:password].blank? && user_params[:password_confirmation].blank?
-      user_params.delete(:password)
-      user_params.delete(:password_confirmation)
+    if attrs[:password].blank? && attrs[:password_confirmation].blank?
+      attrs.delete(:password)
+      attrs.delete(:password_confirmation)
     end
 
-    if @user.update(user_params)
+    if @user.update(attrs)
       redirect_to dashboard_path, notice: "Profile updated successfully"
     else
       render :edit, status: :unprocessable_content
@@ -27,6 +27,18 @@ class ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:user).permit(:name, :email, :date_of_birth, :phone_number, :gender, :occupation, :hobbies, :likes, :dislikes, :password, :password_confirmation)
+    params.require(:user).permit(
+      :name,
+      :email,
+      :date_of_birth,
+      :phone_number,
+      :gender,
+      :occupation,
+      :hobbies,
+      :likes,
+      :dislikes,
+      :password,
+      :password_confirmation
+    )
   end
 end
