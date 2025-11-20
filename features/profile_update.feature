@@ -65,7 +65,7 @@ Feature: Profile Update
     And I fill in "New Password" with "weak"
     And I fill in "Confirm New Password" with "weak"
     And I click "Update Password"
-    Then I should see "must be at least 8 characters"
+    Then I should see "is too short"
 
   Scenario: User clears required name field
     Given I am on the edit profile page

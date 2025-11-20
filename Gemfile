@@ -68,6 +68,7 @@ group :test do
   gem "shoulda-matchers", "~> 6.0"
   gem "rails-controller-testing"
   gem "simplecov", require: false
+  gem 'factory_bot_rails'
 end
 
 group :production do

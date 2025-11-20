@@ -17,9 +17,9 @@ class PasswordResetsController < ApplicationController
   end
 
   def edit
-    @token = PasswordResetToken.active.find_by(token: params[:token])
+    @token = PasswordResetToken.find_by(token: params[:token])
 
-    if @token.nil?
+    if @token.nil? || @token.used
       flash[:alert] = "Invalid or expired password reset link"
       redirect_to login_path
     elsif @token.expired?
@@ -29,9 +29,9 @@ class PasswordResetsController < ApplicationController
   end
 
   def update
-    @token = PasswordResetToken.active.find_by(token: params[:token])
+    @token = PasswordResetToken.find_by(token: params[:token])
 
-    if @token.nil? || @token.expired?
+    if @token.nil? || @token.used || @token.expired?
       flash[:alert] = "Invalid or expired password reset link"
       redirect_to login_path
       return
@@ -46,7 +46,7 @@ class PasswordResetsController < ApplicationController
       flash[:notice] = "Password successfully reset. Please log in with your new password."
       redirect_to login_path
     else
-      flash.now[:alert] = user.errors.full_messages.join(', ')
+      flash.now[:alert] = user.errors.full_messages.first
       render :edit, status: :unprocessable_content
     end
   end

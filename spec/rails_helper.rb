@@ -4,8 +4,8 @@ ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
-
 require 'shoulda/matchers'
+require 'factory_bot_rails'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
@@ -15,11 +15,16 @@ rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
 
+Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+
 RSpec.configure do |config|
   config.fixture_paths = [Rails.root.join('spec/fixtures')]
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
+
+  config.include FactoryBot::Syntax::Methods
+  config.include Rails.application.routes.url_helpers, type: :controller
 
   config.include OmniauthHelpers, type: :controller
   config.include OmniauthHelpers, type: :feature
@@ -27,6 +32,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     OmniAuth.config.test_mode = false
+    ActionMailer::Base.deliveries.clear
   end
 
   config.after(:each) do

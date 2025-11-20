@@ -89,9 +89,9 @@ RSpec.describe "Passwords", type: :request do
         }
 
         expect(response).to have_http_status(:unprocessable_content)
-        expect(response.body).to include("must be at least 8 characters")
+        expect(response.body).to include("is too short")
       end
-    end
+      end
 
     context "OAuth user setting password for first time" do
       let(:oauth_user) do

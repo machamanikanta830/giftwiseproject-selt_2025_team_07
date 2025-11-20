@@ -11,6 +11,8 @@ end
 
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
+Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+
 OmniAuth.config.test_mode = true
 
 Capybara.register_driver :selenium do |app|
@@ -23,6 +25,7 @@ Capybara.javascript_driver = :selenium
 Before do
   OmniAuth.config.test_mode = true
   OmniAuth.config.mock_auth[:google_oauth2] = nil
+  ActionMailer::Base.deliveries.clear
 end
 
 After do

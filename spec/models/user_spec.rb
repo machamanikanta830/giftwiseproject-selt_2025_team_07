@@ -26,27 +26,31 @@ RSpec.describe User, type: :model do
     it 'rejects password without uppercase' do
       user = User.new(name: 'Test', email: 'test@example.com', password: 'password1!')
       expect(user).not_to be_valid
-      expect(user.errors[:password]).to include('must be at least 8 characters and include uppercase, lowercase, number, and special character')
+      expect(user.errors[:password]).to include('must contain at least one uppercase letter')
     end
 
     it 'rejects password without lowercase' do
       user = User.new(name: 'Test', email: 'test@example.com', password: 'PASSWORD1!')
       expect(user).not_to be_valid
+      expect(user.errors[:password]).to include('must contain at least one lowercase letter')
     end
 
     it 'rejects password without number' do
       user = User.new(name: 'Test', email: 'test@example.com', password: 'Password!')
       expect(user).not_to be_valid
+      expect(user.errors[:password]).to include('must contain at least one number')
     end
 
     it 'rejects password without special character' do
       user = User.new(name: 'Test', email: 'test@example.com', password: 'Password1')
       expect(user).not_to be_valid
+      expect(user.errors[:password]).to include('must contain at least one special character')
     end
 
     it 'rejects password shorter than 8 characters' do
       user = User.new(name: 'Test', email: 'test@example.com', password: 'Pass1!')
       expect(user).not_to be_valid
+      expect(user.errors[:password]).to include('is too short (minimum is 8 characters)')
     end
 
     it 'allows OAuth users without password' do
@@ -359,6 +363,61 @@ RSpec.describe User, type: :model do
     it 'returns false when user has no OAuth authentications' do
       user = User.create!(name: 'Regular User', email: 'regular@example.com', password: 'Password1!')
       expect(user.oauth_user?).to be_falsey
+    end
+  end
+
+  describe '#generate_password_reset_token!' do
+    let(:user) { create(:user, email: 'user@example.com') }
+
+    it 'creates a new password reset token' do
+      expect {
+        user.generate_password_reset_token!
+      }.to change(PasswordResetToken, :count).by(1)
+    end
+
+    it 'returns a PasswordResetToken instance' do
+      token = user.generate_password_reset_token!
+      expect(token).to be_a(PasswordResetToken)
+    end
+
+    it 'associates token with the user' do
+      token = user.generate_password_reset_token!
+      expect(token.user).to eq(user)
+    end
+
+    it 'creates an active token' do
+      token = user.generate_password_reset_token!
+      expect(token.used).to be false
+      expect(token.expires_at).to be > Time.current
+    end
+
+    it 'creates token that expires in 1 hour' do
+      token = user.generate_password_reset_token!
+      expect(token.expires_at).to be_within(1.second).of(1.hour.from_now)
+    end
+
+    it 'generates a unique token' do
+      token = user.generate_password_reset_token!
+      expect(token.token).to be_present
+      expect(token.token.length).to be >= 32
+    end
+
+    it 'allows multiple tokens for same user' do
+      expect {
+        user.generate_password_reset_token!
+        user.generate_password_reset_token!
+      }.to change(PasswordResetToken, :count).by(2)
+    end
+
+    it 'creates different tokens each time' do
+      token1 = user.generate_password_reset_token!
+      token2 = user.generate_password_reset_token!
+      expect(token1.token).not_to eq(token2.token)
+    end
+
+    it 'persists the token to database' do
+      token = user.generate_password_reset_token!
+      expect(PasswordResetToken.find(token.id)).to be_present
     end
   end
 end
