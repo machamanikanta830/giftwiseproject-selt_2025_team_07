@@ -24,12 +24,19 @@ Rails.application.routes.draw do
   end
 
   resources :events do
+    resources :ai_gift_suggestions, only: [:index, :create] do
+      member do
+        post :toggle_wishlist
+      end
+    end
+
     member do
       post :add_recipient
       delete :remove_recipient
     end
   end
 
+  resources :wishlists, only: [:index]
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
