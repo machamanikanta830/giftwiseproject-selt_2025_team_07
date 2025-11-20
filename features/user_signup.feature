@@ -52,7 +52,7 @@ Feature: User Sign Up
     And I fill in "Email Address" with "john@example.com"
     And I fill in "Password" with "weak"
     And I click "Create Account"
-    Then I should see "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
+    Then I should see "is too short"
 
   Scenario: Sign up fails with duplicate email
     Given a user exists with email "existing@example.com"

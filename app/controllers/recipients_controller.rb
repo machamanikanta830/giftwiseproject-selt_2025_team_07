@@ -30,7 +30,7 @@ class RecipientsController < ApplicationController
     if @recipient.save
       redirect_to dashboard_path
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -38,7 +38,7 @@ class RecipientsController < ApplicationController
     if @recipient.update(recipient_params)
       redirect_to recipients_path
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

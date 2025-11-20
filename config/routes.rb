@@ -9,6 +9,15 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy"
   get    "logout", to: "sessions#destroy"
 
+  get 'auth/:provider/callback', to: 'sessions#omniauth'
+  post 'auth/:provider/callback', to: 'sessions#omniauth'
+  get 'auth/failure', to: 'sessions#auth_failure'
+
+  get 'forgot_password', to: 'password_resets#new'
+  post 'forgot_password', to: 'password_resets#create'
+  get 'reset_password/:token', to: 'password_resets#edit', as: :reset_password
+  patch 'reset_password/:token', to: 'password_resets#update'
+
   get "dashboard", to: "dashboard#index"
 
   get "/ai_gift_library", to: "ai_gift_suggestions#library", as: :ai_gift_library
