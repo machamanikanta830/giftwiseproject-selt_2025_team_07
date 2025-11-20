@@ -13,6 +13,9 @@ Rails.application.routes.draw do
 
   get "chatbot", to: "chatbots#show"
 
+  # Chatbot API
+  post "chatbot/message", to: "chatbots#message"
+
 
   resource :profile, only: [:edit, :update]
 
