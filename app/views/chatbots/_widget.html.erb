@@ -1,0 +1,136 @@
+<!-- app/views/chatbots/_widget.html.erb -->
+<div
+  data-controller="chatbot"
+  data-action="click@window->chatbot#clickOutside"
+>
+  <!-- Floating chatbot button: fixed bottom-right -->
+  <div
+    style="
+    position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 40;
+    "
+  >
+    <button
+      type="button"
+      data-chatbot-target="button"
+      data-action="click->chatbot#toggle"
+      style="
+      width: 56px;
+        height: 56px;
+        border-radius: 9999px;
+        background: #ffffff;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+      "
+      aria-label="Open GiftWise Assistant"
+    >
+      <%= image_tag "chatbot.png", alt: "Chatbot", style: "width: 36px; height: 36px;" %>
+    </button>
+  </div>
+
+  <!-- Sidebar panel: slides in from right -->
+  <div
+    data-chatbot-target="panel"
+    style="
+    position: fixed;
+      top: 80px;
+      right: 0;
+      height: calc(100vh - 100px);
+      width: 380px;
+      max-width: 100%;
+      background: #ffffff;
+      box-shadow: -12px 0 30px rgba(0, 0, 0, 0.15);
+      border-radius: 24px 0 0 24px;
+      border-left: 1px solid #e5e7eb;
+      z-index: 39;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease-out;
+    "
+  >
+    <!-- Header -->
+    <div
+      style="
+      display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        border-bottom: 1px solid #f3f4f6;
+      "
+    >
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div
+          style="
+          width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            background: #eef2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <%= image_tag "chatbot.png", alt: "Chatbot", style: "width: 20px; height: 20px;" %>
+        </div>
+        <div>
+          <p style="font-size: 14px; font-weight: 600; margin: 0;">GiftWise Assistant</p>
+          <p style="font-size: 11px; color: #6b7280; margin: 0;">
+            Here to help with events &amp; recipients
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        data-action="click->chatbot#close"
+        aria-label="Close chatbot"
+        style="
+        width: 28px;
+          height: 28px;
+          border-radius: 9999px;
+          border: none;
+          background: transparent;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          color: #6b7280;
+        "
+        onmouseover="this.style.background='#f3f4f6'"
+        onmouseout="this.style.background='transparent'"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Body (placeholder content) -->
+    <div
+      style="
+      flex: 1;
+        padding: 14px 18px;
+        font-size: 13px;
+        color: #374151;
+        overflow-y: auto;
+      "
+    >
+      <p style="font-weight: 500; margin-top: 0;">
+        This is your chatbot sidebar placeholder.
+      </p>
+      <p style="font-size: 12px; color: #6b7280;">
+        Later you can plug in real AI chat UI here without touching
+        <code>dashboard/index.html.erb</code>. All chatbot layout lives in
+        <code>app/views/chatbots/_widget.html.erb</code>.
+      </p>
+    </div>
+  </div>
+</div>
