@@ -6,7 +6,7 @@ class CreateAuthentications < ActiveRecord::Migration[7.1]
       t.string :uid
       t.string :email
       t.string :name
-      t.string :avatar_url
+      # t.string :avatar_url
 
       t.timestamps
     end

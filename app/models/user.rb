@@ -3,6 +3,7 @@ class User < ApplicationRecord
   has_many :events, dependent: :destroy
   has_many :event_recipients, dependent: :destroy
   has_many :authentications, dependent: :destroy
+  has_many :password_reset_tokens, dependent: :destroy
 
   attr_accessor :password_confirmation
   attr_reader :password
@@ -80,6 +81,10 @@ class User < ApplicationRecord
   def age
     return nil unless date_of_birth
     ((Date.today - date_of_birth) / 365.25).floor
+  end
+
+  def generate_password_reset_token!
+    password_reset_tokens.create!
   end
 
   attr_accessor :skip_password_validation
