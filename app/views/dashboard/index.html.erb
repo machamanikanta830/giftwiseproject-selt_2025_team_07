@@ -238,4 +238,42 @@
       <% end %>
     </section>
   </main>
+
+
+
+
+  <!-- Chatbot Floating Button - FORCE bottom-right -->
+  <div
+    style="
+    position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+    "
+  >
+    <%= link_to chatbot_path do %>
+      <div
+        style="
+        width: 56px;
+          height: 56px;
+          border-radius: 9999px;
+          background: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+          transition: transform 0.15s ease-out;
+        "
+        onmouseover="this.style.transform='scale(1.06)'"
+        onmouseout="this.style.transform='scale(1)'"
+      >
+        <img src="/assets/chatbot.png" alt="Chatbot" style="width: 40px; height: 40px;">
+      </div>
+    <% end %>
+  </div>
+  <!-- Chatbot Floating Button - FORCE bottom-right END END END END END END END  -->
+
+
+
 </div>
