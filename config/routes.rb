@@ -11,6 +11,9 @@ Rails.application.routes.draw do
 
   get "dashboard", to: "dashboard#index"
 
+  get "chatbot", to: "chatbots#show"
+
+
   resource :profile, only: [:edit, :update]
 
   resource :password, only: [:edit, :update]
