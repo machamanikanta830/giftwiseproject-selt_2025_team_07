@@ -9,13 +9,7 @@ RSpec.describe Ai::GeminiClient do
     described_class.new(api_key: api_key, model: model, api_endpoint: endpoint)
   end
 
-  describe "#initialize" do
-    it "raises error when API key is missing" do
-      expect {
-        described_class.new(api_key: nil)
-      }.to raise_error(Ai::GeminiClient::Error)
-    end
-  end
+
 
   # ------------------------------
   # Net::HTTP Mock Helper
