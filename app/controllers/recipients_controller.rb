@@ -1,57 +1,50 @@
+# app/controllers/recipients_controller.rb
 class RecipientsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_recipient, only: [:show, :edit, :update, :destroy]
 
-
   def index
-    @query = params[:query].to_s.strip
-    @recipients = current_user.recipients.order(:name)
+    @recipients = current_user.recipients
+  end
 
-    if @query.present?
-      q = "%#{@query.downcase}%"
-      @recipients = @recipients.where(
-        "LOWER(name) LIKE ? OR LOWER(email) LIKE ? OR LOWER(relationship) LIKE ?",
-        q, q, q
-      )
-    end
+  def new
+    @recipient = current_user.recipients.new
   end
 
   def show
-    # @recipient is already set by set_recipient
+    @recipient = Recipient.find(params[:id])
+
+    # A) Gift Ideas (only if the recipient has event_recipients)
+    @gift_ideas = GiftIdea.where(event_recipient_id: @recipient.event_recipients.pluck(:id))
+
+    # B) Gift Given Backlogs
+    @gift_given = @recipient.gift_given_backlogs
   end
 
-
-  def new
-    @recipient = current_user.recipients.build
+  def edit
   end
 
   def create
-    @recipient = current_user.recipients.build(recipient_params)
+    @recipient = current_user.recipients.new(recipient_params)
 
     if @recipient.save
-      redirect_to dashboard_path,
-                  notice: "Recipient '#{@recipient.name}' added successfully!"
+      redirect_to dashboard_path
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
-  def edit; end
-
   def update
     if @recipient.update(recipient_params)
-      redirect_to recipients_path,
-                  notice: "Recipient '#{@recipient.name}' updated successfully!"
+      redirect_to recipients_path
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
   def destroy
-    name = @recipient.name
     @recipient.destroy
-    redirect_to recipients_path,
-                notice: "Recipient '#{name}' removed successfully!"
+    redirect_to recipients_path
   end
 
   private

@@ -47,6 +47,9 @@ group :development, :test do
   # RSpec test framework
   gem "rspec-rails", "~> 7.1"
 
+  # FactoryBot for test data
+  gem "factory_bot_rails", "~> 6.4"
+
   # Cucumber (BDD) + Capybara
   gem "cucumber-rails", "~> 2.6", require: false
   gem "capybara", "~> 3.40"
@@ -59,6 +62,7 @@ group :development, :test do
   gem "database_cleaner-active_record", "~> 2.0"
 end
 
+
 group :development do
   # Console on exception pages
   gem "web-console"
@@ -68,9 +72,15 @@ group :test do
   gem "shoulda-matchers", "~> 6.0"
   gem "rails-controller-testing"
   gem "simplecov", require: false
+  # gem 'factory_bot_rails'
 end
 
 group :production do
   # Heroku Postgres
   gem "pg", "~> 1.5"
 end
+
+gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
+
+gem 'dotenv-rails', groups: [:development, :test]

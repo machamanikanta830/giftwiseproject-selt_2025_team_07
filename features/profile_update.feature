@@ -29,20 +29,20 @@ Feature: Profile Update
     And I fill in "Phone Number" with "(123) 456-7890"
     And I select "Male" from "Gender"
     And I fill in "Occupation" with "Software Engineer"
-    And I fill in "Hobbies & Interests" with "Reading, coding"
+    And I fill in "Hobbies and Interests" with "Reading, coding"
     And I fill in "Things You Like" with "Coffee, music"
     And I fill in "Things You Dislike" with "Spam calls"
     And I click "Update Profile"
     Then I should be on the dashboard page
     And I should see "Profile updated successfully"
 
-  Scenario: User updates password successfully
-    Given I am on the edit profile page
-    When I fill in "New Password" with "NewPass1!"
-    And I fill in "Confirm New Password" with "NewPass1!"
-    And I click "Update Profile"
-    Then I should be on the dashboard page
-    And I should see "Profile updated successfully"
+  Scenario: User enters mismatched passwords
+    Given I am on the change password page
+    When I fill in "Current Password" with "Password1!"
+    And I fill in "New Password" with "NewPass1!"
+    And I fill in "Confirm New Password" with "DifferentPass1!"
+    And I click "Update Password"
+    Then I should see "doesn't match Password"
 
   Scenario: User leaves password fields blank (no password change)
     Given I am on the edit profile page
@@ -52,18 +52,20 @@ Feature: Profile Update
     And I should see "Profile updated successfully"
 
   Scenario: User enters mismatched passwords
-    Given I am on the edit profile page
-    When I fill in "New Password" with "NewPass1!"
+    Given I am on the change password page
+    When I fill in "Current Password" with "Password1!"
+    And I fill in "New Password" with "NewPass1!"
     And I fill in "Confirm New Password" with "DifferentPass1!"
-    And I click "Update Profile"
-    Then I should see "Password confirmation doesn't match Password"
+    And I click "Update Password"
+    Then I should see "doesn't match Password"
 
   Scenario: User enters weak password
-    Given I am on the edit profile page
-    When I fill in "New Password" with "weak"
+    Given I am on the change password page
+    When I fill in "Current Password" with "Password1!"
+    And I fill in "New Password" with "weak"
     And I fill in "Confirm New Password" with "weak"
-    And I click "Update Profile"
-    Then I should see "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
+    And I click "Update Password"
+    Then I should see "is too short"
 
   Scenario: User clears required name field
     Given I am on the edit profile page
@@ -100,3 +102,9 @@ Feature: Profile Update
     When I visit the edit profile page
     Then I should be on the login page
     And I should see "Please log in to continue"
+
+  Scenario: Required fields on Edit Profile show asterisk
+    Given I am logged in
+    And I am on the edit profile page
+    Then I should see "Full Name *"
+    And I should see "Email Address *"

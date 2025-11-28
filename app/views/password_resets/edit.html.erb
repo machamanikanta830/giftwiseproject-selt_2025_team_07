@@ -1,0 +1,41 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        Reset Your Password
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Enter your new password below
+      </p>
+    </div>
+
+    <%= form_with url: reset_password_path(token: params[:token]), method: :patch, local: true, class: "mt-8 space-y-6" do |f| %>
+      <% if flash[:alert] %>
+        <div class="rounded-md bg-red-50 p-4">
+          <p class="text-sm text-red-800"><%= flash[:alert] %></p>
+        </div>
+      <% end %>
+
+      <div class="rounded-md shadow-sm space-y-4">
+        <div>
+          <%= label_tag 'user[password]', "New Password", class: "block text-sm font-medium text-gray-700" %>
+          <%= password_field_tag 'user[password]', nil,
+                                 placeholder: "New Password",
+                                 class: "mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" %>
+        </div>
+
+        <div>
+          <%= label_tag 'user[password_confirmation]', "Confirm New Password", class: "block text-sm font-medium text-gray-700" %>
+          <%= password_field_tag 'user[password_confirmation]', nil,
+                                 placeholder: "Confirm New Password",
+                                 class: "mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div>
+        <%= submit_tag "Reset Password",
+                       class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" %>
+      </div>
+    <% end %>
+  </div>
+</div>

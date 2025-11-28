@@ -10,7 +10,62 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_14_073238) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_19_131427) do
+  create_table "ai_gift_suggestions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "event_id", null: false
+    t.integer "recipient_id", null: false
+    t.integer "event_recipient_id", null: false
+    t.string "round_type", default: "initial"
+    t.string "title", null: false
+    t.text "description"
+    t.string "estimated_price"
+    t.string "category"
+    t.string "special_notes"
+    t.string "image_url"
+    t.boolean "saved_to_wishlist", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_ai_gift_suggestions_on_event_id"
+    t.index ["event_recipient_id", "round_type"], name: "index_ai_gift_suggestions_on_event_recipient_id_and_round_type"
+    t.index ["event_recipient_id"], name: "index_ai_gift_suggestions_on_event_recipient_id"
+    t.index ["recipient_id"], name: "index_ai_gift_suggestions_on_recipient_id"
+    t.index ["user_id"], name: "index_ai_gift_suggestions_on_user_id"
+  end
+
+  create_table "audit_logs", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "resource_type"
+    t.integer "resource_id"
+    t.string "action"
+    t.text "old_value"
+    t.text "new_value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_audit_logs_on_user_id"
+  end
+
+  create_table "authentications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "provider"
+    t.string "uid"
+    t.string "email"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_authentications_on_user_id"
+  end
+
+  create_table "collaborators", force: :cascade do |t|
+    t.integer "event_id", null: false
+    t.integer "user_id", null: false
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_collaborators_on_event_id"
+    t.index ["user_id"], name: "index_collaborators_on_user_id"
+  end
+
   create_table "event_recipients", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "event_id", null: false
@@ -39,6 +94,68 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_14_073238) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "event_date"], name: "index_events_on_user_id_and_event_date"
     t.index ["user_id"], name: "index_events_on_user_id"
+  end
+
+  create_table "gift_given_backlogs", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "event_id"
+    t.integer "recipient_id", null: false
+    t.string "gift_name"
+    t.text "description"
+    t.decimal "price"
+    t.string "category"
+    t.string "purchase_link"
+    t.date "given_on"
+    t.integer "created_from_idea_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "event_name"
+    t.index ["event_id"], name: "index_gift_given_backlogs_on_event_id"
+    t.index ["recipient_id"], name: "index_gift_given_backlogs_on_recipient_id"
+    t.index ["user_id"], name: "index_gift_given_backlogs_on_user_id"
+  end
+
+  create_table "gift_ideas", force: :cascade do |t|
+    t.integer "event_recipient_id", null: false
+    t.string "idea"
+    t.text "description"
+    t.decimal "price_estimate"
+    t.string "link"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_recipient_id"], name: "index_gift_ideas_on_event_recipient_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "sender_id"
+    t.integer "receiver_id"
+    t.text "body"
+    t.boolean "read"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "event_id", null: false
+    t.text "message"
+    t.boolean "read"
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_notifications_on_event_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "password_reset_tokens", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "token", null: false
+    t.datetime "expires_at", null: false
+    t.boolean "used", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_password_reset_tokens_on_token", unique: true
+    t.index ["user_id"], name: "index_password_reset_tokens_on_user_id"
   end
 
   create_table "recipients", force: :cascade do |t|
@@ -76,9 +193,38 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_14_073238) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "wishlists", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "recipient_id", null: false
+    t.string "item_name"
+    t.text "notes"
+    t.integer "priority"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipient_id"], name: "index_wishlists_on_recipient_id"
+    t.index ["user_id"], name: "index_wishlists_on_user_id"
+  end
+
+  add_foreign_key "ai_gift_suggestions", "event_recipients"
+  add_foreign_key "ai_gift_suggestions", "events"
+  add_foreign_key "ai_gift_suggestions", "recipients"
+  add_foreign_key "ai_gift_suggestions", "users"
+  add_foreign_key "audit_logs", "users"
+  add_foreign_key "authentications", "users"
+  add_foreign_key "collaborators", "events"
+  add_foreign_key "collaborators", "users"
   add_foreign_key "event_recipients", "events"
   add_foreign_key "event_recipients", "recipients"
   add_foreign_key "event_recipients", "users"
   add_foreign_key "events", "users"
+  add_foreign_key "gift_given_backlogs", "events"
+  add_foreign_key "gift_given_backlogs", "recipients"
+  add_foreign_key "gift_given_backlogs", "users"
+  add_foreign_key "gift_ideas", "event_recipients"
+  add_foreign_key "notifications", "events"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "recipients", "users"
+  add_foreign_key "wishlists", "recipients"
+  add_foreign_key "wishlists", "users"
 end

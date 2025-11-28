@@ -1,0 +1,303 @@
+<header class="w-full bg-white shadow-sm">
+  <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+
+    <%= link_to(current_user.present? ? dashboard_path : root_path,
+                class: "flex items-center gap-2 hover:opacity-90 transition") do %>
+      <div class="w-9 h-9 rounded-2xl bg-[#f4e6ff] flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 24 24"
+             class="w-6 h-6 text-[#a855f7]"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+          <rect x="3" y="8" width="18" height="13" rx="2" ry="2"></rect>
+          <path d="M12 8v13"></path>
+          <path d="M3 12h18"></path>
+          <path d="M12 8h4a2 2 0 0 0 0-4c-3 0-4 4-4 4z"></path>
+          <path d="M12 8H8a2 2 0 0 1 0-4c3 0 4 4 4 4z"></path>
+        </svg>
+      </div>
+      <span class="text-xl font-semibold tracking-tight">GiftWise</span>
+    <% end %>
+
+    <% if current_user %>
+      <nav class="flex items-center gap-4 text-sm font-medium">
+        <div class="relative" data-controller="dropdown">
+          <button
+            type="button"
+            data-action="click->dropdown#toggle"
+            class="w-9 h-9 rounded-full bg-[#f4e6ff] flex items-center justify-center
+                   hover:bg-[#e9d5ff] transition shadow-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 class="w-5 h-5 text-[#a855f7]"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+              <circle cx="12" cy="8" r="3"></circle>
+              <path d="M6 19c0-3 2.5-5 6-5s6 2 6 5"></path>
+            </svg>
+          </button>
+
+          <div
+            data-dropdown-target="menu"
+            class="hidden absolute left-0 mt-3 w-64 origin-top-left rounded-2xl bg-white
+                   shadow-lg border border-gray-200 py-2 z-50"
+          >
+            <div class="px-4 pb-2 border-b border-gray-100 mb-2">
+              <p class="text-sm font-semibold text-gray-900 truncate">
+                <%= current_user.name %>
+              </p>
+              <% if current_user.respond_to?(:email) && current_user.email.present? %>
+                <p class="text-xs text-gray-500 truncate">
+                  <%= current_user.email %>
+                </p>
+              <% end %>
+            </div>
+
+            <%= link_to "Change password",
+                        edit_password_path,
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 whitespace-nowrap" %>
+
+            <div class="mt-2 pt-2 border-t border-gray-100">
+              <%= button_to "Log Out",
+                            logout_path,
+                            method: :delete,
+                            class: "w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 whitespace-nowrap" %>
+            </div>
+          </div>
+        </div>
+      </nav>
+    <% end %>
+  </div>
+</header>
+
+<div class="min-h-screen bg-[#f5f5fb] px-6 py-12">
+  <div class="w-full max-w-2xl mx-auto">
+    <div class="mb-6">
+      <%= link_to dashboard_path,
+                  class: "inline-flex items-center gap-2 text-gray-600 hover:text-gray-900" do %>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="w-5 h-5"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back to Dashboard</span>
+      <% end %>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-lg p-8">
+      <div class="flex items-center justify-center mb-8">
+        <div class="w-12 h-12 rounded-2xl bg-[#f4e6ff] flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               viewBox="0 0 24 24"
+               class="w-8 h-8 text-[#a855f7]"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+      </div>
+
+      <h1 class="text-3xl font-semibold text-center mb-2">
+        <%= @user.has_password? ? "Change Password" : "Set Password" %>
+      </h1>
+      <p class="text-gray-600 text-center mb-8">
+        <% if @user.has_password? %>
+          Update the password for your GiftWise account.
+        <% else %>
+          Set a password to enable email/password login for your account.
+        <% end %>
+      </p>
+
+      <% if @user.oauth_user? && !@user.has_password? %>
+        <div class="mb-6 px-4 py-3 rounded-lg bg-blue-50 border border-blue-200">
+          <p class="text-sm text-blue-700">
+            Your account was created with Google. Setting a password will allow you to login with both Google and email/password.
+          </p>
+        </div>
+      <% end %>
+
+      <% if @user && @user.errors.any? %>
+        <div class="mb-6 px-4 py-3 rounded-lg bg-red-50 border border-red-200">
+          <h3 class="text-sm font-semibold text-red-700 mb-2">Please fix the following errors:</h3>
+          <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= form_with model: @user,
+                    url: password_path,
+                    method: :patch,
+                    local: true,
+                    class: "space-y-6" do |f| %>
+
+        <% if @user.has_password? %>
+          <div>
+            <%= f.label :current_password, "Current Password",
+                        class: "block text-sm font-medium text-gray-700 mb-2" %>
+
+            <div data-controller="password-visibility"
+                 class="flex items-center px-4 py-3 rounded-lg border border-gray-300
+                        focus-within:ring-2 focus-within:ring-[#a855f7]
+                        focus-within:border-transparent transition">
+              <%= f.password_field :current_password,
+                                   required: true,
+                                   autocomplete: "current-password",
+                                   class: "flex-1 border-none focus:outline-none",
+                                   data: { "password-visibility-target": "input" } %>
+
+              <button
+                type="button"
+                data-action="click->password-visibility#toggle"
+                class="px-3 text-gray-400 hover:text-gray-600"
+                aria-label="Toggle password visibility"
+              >
+                <svg data-password-visibility-target="iconOn"
+                     xmlns="http://www.w3.org/2000/svg"
+                     class="w-5 h-5"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+
+                <svg data-password-visibility-target="iconOff"
+                     xmlns="http://www.w3.org/2000/svg"
+                     class="w-5 h-5 hidden"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.77 21.77 0 0 1 5.06-5.94"/>
+                  <path d="M1 1l22 22"/>
+                  <path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-.88"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        <% end %>
+
+        <div>
+          <%= f.label :password, "New Password",
+                      class: "block text-sm font-medium text-gray-700 mb-2" %>
+
+          <div data-controller="password-visibility"
+               class="flex items-center px-4 py-3 rounded-lg border border-gray-300
+                      focus-within:ring-2 focus-within:ring-[#a855f7]
+                      focus-within:border-transparent transition">
+            <%= f.password_field :password,
+                                 required: true,
+                                 autocomplete: "new-password",
+                                 class: "flex-1 border-none focus:outline-none",
+                                 data: { "password-visibility-target": "input" } %>
+
+            <button
+              type="button"
+              data-action="click->password-visibility#toggle"
+              class="px-3 text-gray-400 hover:text-gray-600"
+              aria-label="Toggle password visibility"
+            >
+              <svg data-password-visibility-target="iconOn"
+                   xmlns="http://www.w3.org/2000/svg"
+                   class="w-5 h-5"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor"
+                   stroke-width="2">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+
+              <svg data-password-visibility-target="iconOff"
+                   xmlns="http://www.w3.org/2000/svg"
+                   class="w-5 h-5 hidden"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor"
+                   stroke-width="2">
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.77 21.77 0 0 1 5.06-5.94"/>
+                <path d="M1 1l22 22"/>
+                <path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-.88"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :password_confirmation, "Confirm New Password",
+                      class: "block text-sm font-medium text-gray-700 mb-2" %>
+
+          <div data-controller="password-visibility"
+               class="flex items-center px-4 py-3 rounded-lg border border-gray-300
+                      focus-within:ring-2 focus-within:ring-[#a855f7]
+                      focus-within:border-transparent transition">
+            <%= f.password_field :password_confirmation,
+                                 required: true,
+                                 autocomplete: "new-password",
+                                 class: "flex-1 border-none focus:outline-none",
+                                 data: { "password-visibility-target": "input" } %>
+
+            <button
+              type="button"
+              data-action="click->password-visibility#toggle"
+              class="px-3 text-gray-400 hover:text-gray-600"
+              aria-label="Toggle password visibility"
+            >
+              <svg data-password-visibility-target="iconOn"
+                   xmlns="http://www.w3.org/2000/svg"
+                   class="w-5 h-5"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor"
+                   stroke-width="2">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+
+              <svg data-password-visibility-target="iconOff"
+                   xmlns="http://www.w3.org/2000/svg"
+                   class="w-5 h-5 hidden"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor"
+                   stroke-width="2">
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.77 21.77 0 0 1 5.06-5.94"/>
+                <path d="M1 1l22 22"/>
+                <path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-.88"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-4 pt-6">
+          <%= link_to "Cancel", dashboard_path,
+                      class: "flex-1 px-6 py-3 rounded-full border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition text-center" %>
+
+          <%= f.submit (@user.has_password? ? "Update Password" : "Set Password"),
+                       class: "flex-1 px-8 py-3 rounded-full bg-black text-white font-semibold hover:bg-gray-900 transition cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
