@@ -1,37 +1,37 @@
 {
   "RSpec": {
     "coverage": {
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/helpers/application_helper.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/helpers/application_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/helpers/dashboard_helper.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/helpers/dashboard_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/helpers/events_helper.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/helpers/events_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/helpers/home_helper.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/helpers/home_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/helpers/profiles_helper.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/helpers/profiles_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/ai_gift_suggestions_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/ai_gift_suggestions_controller.rb": {
         "lines": [
           1,
           1,
@@ -53,23 +53,42 @@
           3,
           null,
           null,
+          3,
+          0,
+          0,
+          null,
+          0,
           null,
           null,
           3,
+          null,
+          null,
+          null,
+          null,
           3,
           null,
-          2,
-          1,
-          null,
           null,
           2,
+          1,
+          null,
+          null,
+          2,
           2,
           null,
+          null,
           1,
+          null,
+          null,
+          1,
+          0,
+          null,
+          1,
+          null,
           null,
           1,
           1,
           1,
+          null,
           null,
           0,
           null,
@@ -133,6 +152,12 @@
           null,
           null,
           1,
+          1,
+          3,
+          null,
+          3,
+          null,
+          null,
           null,
           1,
           2,
@@ -184,7 +209,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/application_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/application_controller.rb": {
         "lines": [
           1,
           1,
@@ -209,7 +234,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/chatbots_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/chatbots_controller.rb": {
         "lines": [
           null,
           1,
@@ -685,7 +710,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/dashboard_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/dashboard_controller.rb": {
         "lines": [
           1,
           1,
@@ -700,7 +725,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/events_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/events_controller.rb": {
         "lines": [
           1,
           1,
@@ -825,7 +850,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/gift_ideas_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/gift_ideas_controller.rb": {
         "lines": [
           null,
           1,
@@ -881,7 +906,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/home_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/home_controller.rb": {
         "lines": [
           1,
           1,
@@ -894,7 +919,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/password_resets_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/password_resets_controller.rb": {
         "lines": [
           1,
           1,
@@ -951,7 +976,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/profiles_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/profiles_controller.rb": {
         "lines": [
           1,
           1,
@@ -999,7 +1024,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/recipients_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/recipients_controller.rb": {
         "lines": [
           null,
           1,
@@ -1075,7 +1100,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/registrations_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/registrations_controller.rb": {
         "lines": [
           1,
           1,
@@ -1100,7 +1125,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/sessions_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/sessions_controller.rb": {
         "lines": [
           1,
           1,
@@ -1147,7 +1172,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/wishlists_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/wishlists_controller.rb": {
         "lines": [
           1,
           null,
@@ -1164,7 +1189,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/mailers/PasswordResetMailer.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/mailers/PasswordResetMailer.rb": {
         "lines": [
           1,
           1,
@@ -1185,7 +1210,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/mailers/application_mailer.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/mailers/application_mailer.rb": {
         "lines": [
           1,
           1,
@@ -1193,7 +1218,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/authentication.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/authentication.rb": {
         "lines": [
           1,
           1,
@@ -1203,14 +1228,14 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/application_record.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/application_record.rb": {
         "lines": [
           1,
           1,
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/event.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/event.rb": {
         "lines": [
           1,
           1,
@@ -1245,7 +1270,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/gift_idea.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/gift_idea.rb": {
         "lines": [
           null,
           1,
@@ -1255,7 +1280,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/password_reset_token.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/password_reset_token.rb": {
         "lines": [
           1,
           1,
@@ -1292,7 +1317,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/recipient.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/recipient.rb": {
         "lines": [
           1,
           1,
@@ -1339,7 +1364,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/user.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/user.rb": {
         "lines": [
           1,
           1,
@@ -1464,7 +1489,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/gift_given_backlogs_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/gift_given_backlogs_controller.rb": {
         "lines": [
           1,
           1,
@@ -1525,7 +1550,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/services/ai/gemini_client.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/services/ai/gemini_client.rb": {
         "lines": [
           null,
           1,
@@ -1672,7 +1697,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/services/ai/gift_suggester.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/services/ai/gift_suggester.rb": {
         "lines": [
           null,
           1,
@@ -1817,7 +1842,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/services/ai/prompt_builder.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/services/ai/prompt_builder.rb": {
         "lines": [
           null,
           1,
@@ -1942,7 +1967,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/services/unsplash_client.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/services/unsplash_client.rb": {
         "lines": [
           null,
           1,
@@ -2004,7 +2029,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/event_recipient.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/event_recipient.rb": {
         "lines": [
           1,
           1,
@@ -2016,7 +2041,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/ai_gift_suggestion.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/ai_gift_suggestion.rb": {
         "lines": [
           1,
           1,
@@ -2028,7 +2053,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/wishlist.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/wishlist.rb": {
         "lines": [
           1,
           1,
@@ -2036,7 +2061,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/gift_given_backlog.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/gift_given_backlog.rb": {
         "lines": [
           1,
           1,
@@ -2049,7 +2074,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/controllers/passwords_controller.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/controllers/passwords_controller.rb": {
         "lines": [
           1,
           1,
@@ -2085,7 +2110,7 @@
           null
         ]
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/channels/application_cable/channel.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/channels/application_cable/channel.rb": {
         "lines": [
           0,
           0,
@@ -2094,7 +2119,7 @@
         ],
         "branches": {}
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/channels/application_cable/connection.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/channels/application_cable/connection.rb": {
         "lines": [
           0,
           0,
@@ -2103,7 +2128,7 @@
         ],
         "branches": {}
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/jobs/application_job.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/jobs/application_job.rb": {
         "lines": [
           0,
           null,
@@ -2115,7 +2140,7 @@
         ],
         "branches": {}
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/audit_log.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/audit_log.rb": {
         "lines": [
           0,
           0,
@@ -2123,7 +2148,7 @@
         ],
         "branches": {}
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/collaborator.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/collaborator.rb": {
         "lines": [
           0,
           0,
@@ -2132,7 +2157,7 @@
         ],
         "branches": {}
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/gift_suggestion.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/gift_suggestion.rb": {
         "lines": [
           0,
           0,
@@ -2143,14 +2168,14 @@
         ],
         "branches": {}
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/message.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/message.rb": {
         "lines": [
           0,
           0
         ],
         "branches": {}
       },
-      "/Users/preddy/Desktop/giftwiseproject-selt_2025_team_07/app/models/notification.rb": {
+      "/Users/machamanikanta/Desktop/Fall25/SELT/Project/giftwiseproject-selt_2025_team_07/app/models/notification.rb": {
         "lines": [
           0,
           0,
@@ -2160,6 +2185,6 @@
         "branches": {}
       }
     },
-    "timestamp": 1763703852
+    "timestamp": 1765430582
   }
 }

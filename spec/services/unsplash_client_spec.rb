@@ -10,10 +10,19 @@ RSpec.describe UnsplashClient do
 
   describe "#initialize" do
     it "raises an error if access key is missing" do
+      # Make sure no fallback key is available from ENV or credentials
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with("UNSPLASH_ACCESS_KEY").and_return(nil)
+
+      allow(Rails.application).to receive(:credentials).and_return(
+        double("creds", dig: nil)
+      )
+
       expect {
         described_class.new(access_key: nil)
       }.to raise_error(UnsplashClient::Error, /missing/)
     end
+
   end
 
   # ==========================================================
