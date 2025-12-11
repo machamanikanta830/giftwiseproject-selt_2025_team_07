@@ -11,6 +11,12 @@ class User < ApplicationRecord
   has_many :friends, -> { where(friendships: { status: 'accepted' }) },
            through: :friendships, source: :friend
 
+  # ADD THIS ↓
+  has_many :received_friendships,
+           class_name: 'Friendship',
+           foreign_key: 'friend_id',
+           dependent: :destroy
+
   has_many :pending_friend_requests, -> { pending },
            class_name: 'Friendship', foreign_key: 'friend_id'
 

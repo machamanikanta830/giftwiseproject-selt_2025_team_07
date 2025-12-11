@@ -9,7 +9,7 @@ class Message < ApplicationRecord
 
   # CRITICAL FOR SQLITE: Serialize the array
   # This allows Rails to store/retrieve arrays in a string column
-  serialize :deleted_by_user_ids, Array
+  serialize :deleted_by_user_ids, type: Array, coder: JSON
 
   # Scope to get messages between two users
   scope :between, ->(user1, user2) {
