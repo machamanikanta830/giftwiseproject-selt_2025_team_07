@@ -58,8 +58,12 @@ Rails.application.routes.draw do
   # ========================================
 
   # Friendships routes
-  resources :friendships, only: [:index, :create, :update, :destroy]
-
+  resources :friendships, only: [:index, :create, :destroy] do
+    member do
+      patch :accept
+      delete :reject
+    end
+  end
   # Messages routes
   resources :messages, only: [:index, :create] do
     collection do
