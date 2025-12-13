@@ -1,3 +1,4 @@
+#features/step_definitions/recipient_steps.rb
 Given("I am logged in") do
   @user = User.create!(name: "Test User", email: "test@test.com", password: "Password1!")
   visit login_path

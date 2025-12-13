@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_19_131427) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_13_014859) do
   create_table "ai_gift_suggestions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "event_id", null: false
@@ -56,13 +56,33 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_131427) do
     t.index ["user_id"], name: "index_authentications_on_user_id"
   end
 
+  create_table "collaboration_invites", force: :cascade do |t|
+    t.integer "event_id", null: false
+    t.integer "inviter_id", null: false
+    t.string "invitee_email", null: false
+    t.string "role", null: false
+    t.string "token", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "sent_at"
+    t.datetime "accepted_at"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "invitee_email"], name: "index_collaboration_invites_on_event_id_and_invitee_email"
+    t.index ["event_id"], name: "index_collaboration_invites_on_event_id"
+    t.index ["inviter_id"], name: "index_collaboration_invites_on_inviter_id"
+    t.index ["token"], name: "index_collaboration_invites_on_token", unique: true
+  end
+
   create_table "collaborators", force: :cascade do |t|
     t.integer "event_id", null: false
     t.integer "user_id", null: false
     t.string "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "pending", null: false
     t.index ["event_id"], name: "index_collaborators_on_event_id"
+    t.index ["status"], name: "index_collaborators_on_status"
     t.index ["user_id"], name: "index_collaborators_on_user_id"
   end
 
@@ -94,6 +114,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_131427) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "event_date"], name: "index_events_on_user_id_and_event_date"
     t.index ["user_id"], name: "index_events_on_user_id"
+  end
+
+  create_table "friendships", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "friend_id", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
+    t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
   create_table "gift_given_backlogs", force: :cascade do |t|
@@ -201,6 +232,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_131427) do
     t.integer "priority"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "ai_gift_suggestion_id"
+    t.index ["ai_gift_suggestion_id"], name: "index_wishlists_on_ai_gift_suggestion_id"
     t.index ["recipient_id"], name: "index_wishlists_on_recipient_id"
     t.index ["user_id"], name: "index_wishlists_on_user_id"
   end
@@ -211,12 +244,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_131427) do
   add_foreign_key "ai_gift_suggestions", "users"
   add_foreign_key "audit_logs", "users"
   add_foreign_key "authentications", "users"
+  add_foreign_key "collaboration_invites", "events"
+  add_foreign_key "collaboration_invites", "users", column: "inviter_id"
   add_foreign_key "collaborators", "events"
   add_foreign_key "collaborators", "users"
   add_foreign_key "event_recipients", "events"
   add_foreign_key "event_recipients", "recipients"
   add_foreign_key "event_recipients", "users"
   add_foreign_key "events", "users"
+  add_foreign_key "friendships", "users"
+  add_foreign_key "friendships", "users", column: "friend_id"
   add_foreign_key "gift_given_backlogs", "events"
   add_foreign_key "gift_given_backlogs", "recipients"
   add_foreign_key "gift_given_backlogs", "users"
@@ -225,6 +262,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_131427) do
   add_foreign_key "notifications", "users"
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "recipients", "users"
+  add_foreign_key "wishlists", "ai_gift_suggestions"
   add_foreign_key "wishlists", "recipients"
   add_foreign_key "wishlists", "users"
 end
