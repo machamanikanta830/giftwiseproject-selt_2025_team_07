@@ -33,15 +33,32 @@ class AiGiftSuggestionsController < ApplicationController
       event_recipient: @event_recipient
     )
 
-    ideas = suggester.call(round_type: round_type)
+    fallback_used = false
+
+    begin
+      ideas = suggester.call(round_type: round_type)
+    rescue Ai::GeminiClient::Error
+      ideas = []
+    end
 
     # Extra safety: if AI returns nothing, still create stub ideas
+    begin
+      ideas = suggester.call(round_type: round_type)
+    rescue Ai::GeminiClient::Error
+      ideas = []
+    end
+
     if ideas.blank? && (Rails.env.test? || Rails.env.development?)
       ideas = generate_test_stub_ideas(@event_recipient, round_type)
+      fallback_used = true
     end
 
     flash[:notice] =
-      "Generated #{ideas.size} ideas for #{@event_recipient.recipient.name}."
+      if fallback_used
+        "Generated #{ideas.size} sample ideas for #{@event_recipient.recipient.name} (AI not configured)."
+      else
+        "Generated #{ideas.size} ideas for #{@event_recipient.recipient.name}."
+      end
 
     redirect_to event_ai_gift_suggestions_path(@event, from: params[:from])
   end
