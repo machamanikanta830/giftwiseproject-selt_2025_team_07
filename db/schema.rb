@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_11_154739) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_13_014859) do
   create_table "ai_gift_suggestions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "event_id", null: false
@@ -56,13 +56,33 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_11_154739) do
     t.index ["user_id"], name: "index_authentications_on_user_id"
   end
 
+  create_table "collaboration_invites", force: :cascade do |t|
+    t.integer "event_id", null: false
+    t.integer "inviter_id", null: false
+    t.string "invitee_email", null: false
+    t.string "role", null: false
+    t.string "token", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "sent_at"
+    t.datetime "accepted_at"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "invitee_email"], name: "index_collaboration_invites_on_event_id_and_invitee_email"
+    t.index ["event_id"], name: "index_collaboration_invites_on_event_id"
+    t.index ["inviter_id"], name: "index_collaboration_invites_on_inviter_id"
+    t.index ["token"], name: "index_collaboration_invites_on_token", unique: true
+  end
+
   create_table "collaborators", force: :cascade do |t|
     t.integer "event_id", null: false
     t.integer "user_id", null: false
     t.string "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "pending", null: false
     t.index ["event_id"], name: "index_collaborators_on_event_id"
+    t.index ["status"], name: "index_collaborators_on_status"
     t.index ["user_id"], name: "index_collaborators_on_user_id"
   end
 
@@ -144,7 +164,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_11_154739) do
     t.boolean "read"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "deleted_by_user_ids", default: "[]"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -213,6 +232,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_11_154739) do
     t.integer "priority"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "ai_gift_suggestion_id"
+    t.index ["ai_gift_suggestion_id"], name: "index_wishlists_on_ai_gift_suggestion_id"
     t.index ["recipient_id"], name: "index_wishlists_on_recipient_id"
     t.index ["user_id"], name: "index_wishlists_on_user_id"
   end
@@ -223,6 +244,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_11_154739) do
   add_foreign_key "ai_gift_suggestions", "users"
   add_foreign_key "audit_logs", "users"
   add_foreign_key "authentications", "users"
+  add_foreign_key "collaboration_invites", "events"
+  add_foreign_key "collaboration_invites", "users", column: "inviter_id"
   add_foreign_key "collaborators", "events"
   add_foreign_key "collaborators", "users"
   add_foreign_key "event_recipients", "events"
@@ -239,6 +262,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_11_154739) do
   add_foreign_key "notifications", "users"
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "recipients", "users"
+  add_foreign_key "wishlists", "ai_gift_suggestions"
   add_foreign_key "wishlists", "recipients"
   add_foreign_key "wishlists", "users"
 end
