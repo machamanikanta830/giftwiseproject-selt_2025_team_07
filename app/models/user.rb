@@ -5,6 +5,8 @@ class User < ApplicationRecord
   has_many :authentications, dependent: :destroy
   has_many :password_reset_tokens, dependent: :destroy
   has_many :ai_gift_suggestions, dependent: :destroy
+  has_one :mfa_credential, dependent: :destroy
+  has_many :backup_codes, dependent: :destroy
 
   attr_accessor :password_confirmation
   attr_reader :password
@@ -73,7 +75,11 @@ class User < ApplicationRecord
   end
 
   def has_password?
-    password_db.present?
+    read_attribute(:password).present?
+  end
+
+  def password_login?
+    read_attribute(:password).present?
   end
 
   def oauth_user?
@@ -87,6 +93,25 @@ class User < ApplicationRecord
 
   def generate_password_reset_token!
     password_reset_tokens.create!
+  end
+
+  def mfa_enabled?
+    mfa_credential&.enabled? || false
+  end
+
+  def verify_mfa_code(code)
+    return false unless mfa_enabled?
+    mfa_credential.verify_code(code)
+  end
+
+  def verify_backup_code(code)
+    backup_codes.where(used: false).each do |backup_code|
+      if backup_code.verify(code)
+        backup_code.mark_as_used!
+        return true
+      end
+    end
+    false
   end
 
   private
