@@ -6,12 +6,26 @@ class User < ApplicationRecord
   has_many :password_reset_tokens, dependent: :destroy
   has_many :ai_gift_suggestions, dependent: :destroy
 
+  # Collaboration relationships
+  has_many :collaborators, class_name: "Collaborator", dependent: :destroy
+  has_many :collaborating_events, through: :collaborators, source: :event
+  has_many :wishlists, dependent: :destroy
+
   # Friendships
   has_many :friendships, dependent: :destroy
-  has_many :friends, -> { where(friendships: { status: 'accepted' }) },
-           through: :friendships, source: :friend
+  has_many :friends,
+           -> { where(friendships: { status: "accepted" }) },
+           through: :friendships,
+           source: :friend
 
-  # ADD THIS ↓
+
+  # Incoming collab invites (where user is invited)
+  has_many :pending_collaboration_requests,
+           -> { pending },
+           class_name: "Collaborator",
+           foreign_key: :user_id
+
+
   has_many :received_friendships,
            class_name: 'Friendship',
            foreign_key: 'friend_id',

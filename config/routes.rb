@@ -74,8 +74,28 @@ Rails.application.routes.draw do
   # ActionCable mount for real-time messaging
   mount ActionCable.server => '/cable'
 
+  #collaborations
+  resources :events do
+    resources :ai_gift_suggestions, only: [:index, :create] do
+      member do
+        post :toggle_wishlist
+      end
+    end
 
+    resources :collaborators, only: [:create, :update, :destroy]
 
+    member do
+      post :add_recipient
+      delete :remove_recipient
+    end
+  end
+
+  resources :collaboration_requests, only: [:index] do
+    member do
+      post   :accept
+      delete :reject
+    end
+  end
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
