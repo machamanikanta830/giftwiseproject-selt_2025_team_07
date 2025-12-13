@@ -9,10 +9,24 @@ RSpec.describe UnsplashClient do
   end
 
   describe "#initialize" do
+    around do |ex|
+      original_env = ENV.to_hash
+      ENV.delete("UNSPLASH_ACCESS_KEY")
+      ENV.delete("UNSPLASH_API_BASE")
+      ex.run
+    ensure
+      ENV.replace(original_env)
+    end
+
     it "raises an error if access key is missing" do
+      creds = double("credentials")
+      allow(creds).to receive(:dig).with(:unsplash, :access_key).and_return(nil)
+      allow(creds).to receive(:dig).with(:unsplash, :api_base).and_return(nil)
+      allow(Rails.application).to receive(:credentials).and_return(creds)
+
       expect {
         described_class.new(access_key: nil)
-      }.to raise_error(UnsplashClient::Error, /missing/)
+      }.to raise_error(UnsplashClient::Error, /missing/i)
     end
   end
 
