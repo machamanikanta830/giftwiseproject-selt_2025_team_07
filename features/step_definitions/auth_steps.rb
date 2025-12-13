@@ -1,3 +1,4 @@
+# features/step_definitions/auth_steps.rb
 Given('I am on the sign up page') do
   visit signup_path
 end
@@ -32,12 +33,26 @@ Given('I am a registered user with email {string} and password {string}') do |em
 end
 
 Given('I am logged in as {string}') do |email|
-  user = User.find_by(email: email)
+  User.find_or_create_by!(email: email) do |u|
+    u.name = "Test User"
+    u.password = "Password1!"
+    u.password_confirmation = "Password1!"
+  end
+
   visit login_path
-  fill_in 'Email Address', with: email
-  fill_in 'Password', with: 'Password1!'
-  click_button 'Log In'
+
+  if page.has_field?("Email Address")
+    fill_in "Email Address", with: email
+  else
+    fill_in "Email", with: email
+  end
+
+  fill_in "Password", with: "Password1!"
+  click_button "Log In"
+
+  expect(page).to have_current_path(dashboard_path, ignore_query: true)
 end
+
 
 When('I fill in {string} with {string}') do |field, value|
   fill_in field, with: value
