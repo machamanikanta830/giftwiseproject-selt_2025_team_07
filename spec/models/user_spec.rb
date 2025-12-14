@@ -1,3 +1,6 @@
+# spec/models/user_spec.rb
+require "rails_helper"
+
 RSpec.describe User, type: :model do
   describe ".from_omniauth" do
     let(:auth_hash) do
@@ -35,12 +38,12 @@ RSpec.describe User, type: :model do
 
   describe "#has_password?" do
     it "returns false when password is not set" do
-      user = create(:user, password: nil)
+      user = create(:user, password: nil, password_confirmation: nil)
       expect(user.has_password?).to eq(false)
     end
 
     it "returns true when password exists" do
-      user = create(:user, password: "Password@123")
+      user = create(:user, password: "Password@123", password_confirmation: "Password@123")
       expect(user.has_password?).to eq(true)
     end
   end
@@ -60,7 +63,13 @@ RSpec.describe User, type: :model do
   describe "MFA verification" do
     it "verifies MFA code when enabled" do
       user = create(:user)
-      mfa = create(:mfa_credential, user: user, enabled: true)
+
+      # Avoid relying on a missing factory (:mfa_credential)
+      mfa = MfaCredential.create!(
+        user: user,
+        secret_key: "TESTSECRETKEY",
+        enabled: true
+      )
 
       allow(mfa).to receive(:verify_code).and_return(true)
 
@@ -71,17 +80,32 @@ RSpec.describe User, type: :model do
   describe "backup code verification" do
     it "marks backup code as used when verified" do
       user = create(:user)
-      backup = create(:backup_code, user: user, used: false)
 
-      allow(backup).to receive(:verify).and_return(true)
+      # Avoid relying on a missing factory (:backup_code) and invalid hashes.
+      raw_code = "backup123"
+      digest = BCrypt::Password.create(raw_code)
 
-      expect(user.verify_backup_code("backup123")).to eq(true)
+      backup = BackupCode.create!(
+        user: user,
+        code_digest: digest,
+        used: false
+      )
+
+      expect(user.verify_backup_code(raw_code)).to eq(true)
       expect(backup.reload.used).to eq(true)
     end
 
     it "returns false when no backup code matches" do
       user = create(:user)
-      create(:backup_code, user: user, used: false)
+
+      raw_code = "backup123"
+      digest = BCrypt::Password.create(raw_code)
+
+      BackupCode.create!(
+        user: user,
+        code_digest: digest,
+        used: false
+      )
 
       expect(user.verify_backup_code("wrong")).to eq(false)
     end
@@ -98,7 +122,7 @@ RSpec.describe User, type: :model do
 
   describe "password complexity validation" do
     it "adds errors for weak passwords" do
-      user = build(:user, password: "weak")
+      user = build(:user, password: "weak", password_confirmation: "weak")
 
       expect(user).not_to be_valid
       expect(user.errors[:password]).to be_present

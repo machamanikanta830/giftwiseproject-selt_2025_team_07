@@ -136,9 +136,9 @@ When("I fill in the gift idea form correctly") do
   end
 end
 
-When('I press {string}') do |text|
-  click_on text   # works for both buttons and links
-end
+# When('I press {string}') do |text|
+#   click_on text   # works for both buttons and links
+# end
 
 # ================================
 # THENs

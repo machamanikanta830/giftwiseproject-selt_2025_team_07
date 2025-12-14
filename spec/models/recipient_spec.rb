@@ -18,14 +18,14 @@ RSpec.describe Recipient, type: :model do
       age: 30,
       gender: "Male"
     )
-
     expect(rec).to be_valid
   end
 
   it "is invalid without a name" do
     rec = user.recipients.new(
       name: nil,
-      relationship: "Friend"
+      relationship: "Friend",
+      email: "john@example.com"
     )
 
     expect(rec).not_to be_valid
@@ -35,24 +35,26 @@ RSpec.describe Recipient, type: :model do
   it "is invalid without a relationship" do
     rec = user.recipients.new(
       name: "John",
-      relationship: nil
+      relationship: nil,
+      email: "john@example.com"
     )
 
     expect(rec).not_to be_valid
     expect(rec.errors[:relationship]).to include("can't be blank")
   end
 
-  it "allows blank email" do
+  it "is invalid without an email" do
     rec = user.recipients.new(
       name: "John",
       relationship: "Friend",
       email: ""
     )
 
-    expect(rec).to be_valid
+    expect(rec).not_to be_valid
+    expect(rec.errors[:email]).to be_present
   end
 
-  it "validates email format when present" do
+  it "validates email format" do
     rec = user.recipients.new(
       name: "John",
       relationship: "Friend",
@@ -63,13 +65,30 @@ RSpec.describe Recipient, type: :model do
     expect(rec.errors[:email]).to be_present
   end
 
+  it "enforces email uniqueness per user (case-insensitive)" do
+    user.recipients.create!(
+      name: "A",
+      relationship: "Friend",
+      email: "john@example.com"
+    )
+
+    rec2 = user.recipients.new(
+      name: "B",
+      relationship: "Friend",
+      email: "JOHN@EXAMPLE.COM"
+    )
+
+    expect(rec2).not_to be_valid
+    expect(rec2.errors[:email]).to be_present
+  end
+
   it "allows nil age" do
     rec = user.recipients.new(
       name: "John",
       relationship: "Friend",
+      email: "john2@example.com",
       age: nil
     )
-
     expect(rec).to be_valid
   end
 
@@ -77,6 +96,7 @@ RSpec.describe Recipient, type: :model do
     rec = user.recipients.new(
       name: "John",
       relationship: "Friend",
+      email: "john3@example.com",
       age: 25.5
     )
 
@@ -88,9 +108,9 @@ RSpec.describe Recipient, type: :model do
     rec = user.recipients.new(
       name: "John",
       relationship: "Friend",
+      email: "john4@example.com",
       gender: nil
     )
-
     expect(rec).to be_valid
   end
 
@@ -98,6 +118,7 @@ RSpec.describe Recipient, type: :model do
     rec = user.recipients.new(
       name: "John",
       relationship: "Friend",
+      email: "john5@example.com",
       gender: "InvalidGender"
     )
 
@@ -106,40 +127,51 @@ RSpec.describe Recipient, type: :model do
   end
 
   it "belongs to a user" do
-    rec = user.recipients.create!(name: "Ayra", relationship: "Family")
+    rec = user.recipients.create!(
+      name: "Ayra",
+      relationship: "Family",
+      email: "ayra@example.com"
+    )
     expect(rec.user).to eq(user)
   end
 
   it "can be associated with events through event_recipients" do
-    rec   = user.recipients.create!(name: "Ayra", relationship: "Family")
+    rec = user.recipients.create!(
+      name: "Ayra",
+      relationship: "Family",
+      email: "ayra2@example.com"
+    )
+
     event = user.events.create!(
       event_name: "Birthday Party",
       event_date: Date.today,
       description: "Test event"
     )
 
-
-    event_recipient = EventRecipient.create!(recipient: rec, event: event, user: user)
+    er = EventRecipient.create!(recipient: rec, event: event, user: user)
 
     expect(rec.events).to include(event)
-    expect(rec.event_recipients).to include(event_recipient)
+    expect(rec.event_recipients).to include(er)
   end
 
   describe "#events_with_details" do
     it "returns event_recipients with events eager loaded" do
-      rec   = user.recipients.create!(name: "Myra", relationship: "Friend")
+      rec = user.recipients.create!(
+        name: "Myra",
+        relationship: "Friend",
+        email: "myra@example.com"
+      )
+
       event = user.events.create!(
         event_name: "Anniversary Party",
         event_date: Date.today,
         description: "Test event"
       )
 
-
       er = EventRecipient.create!(recipient: rec, event: event, user: user)
 
       result = rec.events_with_details
       expect(result).to include(er)
-      # optional: check that events are preloaded (no N+1) if you want
     end
   end
 end

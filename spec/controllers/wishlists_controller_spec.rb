@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe WishlistsController, type: :controller do
   let(:user) { User.create!(name: "Test User", email: "test@example.com", password: "Password1!") }
   let(:event) { user.events.create!(event_name: "Birthday", event_date: Date.today + 3.days, budget: 100) }
-  let(:recipient) { user.recipients.create!(name: "Mom", relationship: "Mother") }
+  let(:recipient) { user.recipients.create!(name: "Mom", relationship: "Mother", email: "mom@example.com") }
   let!(:event_recipient) { EventRecipient.create!(user: user, event: event, recipient: recipient) }
 
   let!(:saved_idea) do

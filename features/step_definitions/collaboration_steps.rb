@@ -94,17 +94,13 @@ When("I accept the collaboration for {string} on event {string}") do |email, eve
   page.driver.submit :post, accept_collaboration_request_path(collab.id), {}
 end
 
-When('I fill in {string} with {string}') do |field, value|
-  fill_in field, with: value
-end
-
-When('I select {string} from {string}') do |value, field|
-  select value, from: field
-end
-
-When('I press {string}') do |button|
-  click_button button
-end
+# When('I fill in {string} with {string}') do |field, value|
+#   fill_in field, with: value
+# end
+#
+# When('I select {string} from {string}') do |value, field|
+#   select value, from: field
+# end
 
 Then('{string} should receive an email') do |email|
   expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(email)
