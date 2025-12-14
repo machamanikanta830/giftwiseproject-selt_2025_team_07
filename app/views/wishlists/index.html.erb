@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-[#f5f5fb] text-gray-900">
-  <main class="max-w-6xl mx-auto px-6 pt-10 pb-16">
 
+  <main class="max-w-6xl mx-auto px-6 pt-10 pb-16">
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center gap-4">
         <%= link_to "← Back to Dashboard",
@@ -12,21 +12,22 @@
 
     <% if @wishlist_items.any? %>
       <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        <% @wishlist_items.each do |wishlist| %>
-          <% idea = wishlist.ai_gift_suggestion %>
-
-          <div id="wishlist_<%= wishlist.id %>"
-               class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
-
+        <% @wishlist_items.each do |idea| %>
+          <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
             <% if idea.image_url.present? %>
               <img src="<%= idea.image_url %>"
-                   class="w-full h-32 object-cover"
-                   alt="<%= idea.title %>">
+                   alt="<%= idea.title %>"
+                   class="w-full h-32 object-cover">
             <% end %>
 
             <div class="p-4 flex flex-col flex-1">
               <p class="text-xs text-gray-400 mb-1">
-                <%= idea.event.event_name %> • <%= idea.recipient.name %>
+                <% if idea.event.present? %>
+                  <%= idea.event.event_name %>
+                <% end %>
+                <% if idea.recipient.present? %>
+                  • <%= idea.recipient.name %>
+                <% end %>
               </p>
 
               <h2 class="font-semibold text-sm mb-1"><%= idea.title %></h2>
@@ -35,22 +36,36 @@
                 <%= truncate(idea.description.to_s, length: 120) %>
               </p>
 
-              <p class="text-[11px] text-gray-500 mb-3">
-                <%= idea.estimated_price %>
+              <p class="text-[11px] text-gray-500 leading-snug mb-3">
+                <% if idea.category.present? %>
+                  <strong>Category:</strong> <%= idea.category %><br>
+                <% end %>
+                <% if idea.estimated_price.present? %>
+                  <strong>Est. price:</strong> <%= idea.estimated_price %><br>
+                <% end %>
               </p>
 
               <div class="flex items-center justify-between mt-auto">
-                <%= button_to "Move to cart",
-                              move_to_cart_wishlist_path(wishlist),
-                              method: :post,
-                              class: "text-xs font-medium text-[#a855f7] hover:underline",
-                              form: { data: { turbo: true } } %>
+                <%= link_to "View event",
+                            event_path(idea.event, from: "wishlist"),
+                            class: "text-xs font-medium text-[#a855f7] hover:text-[#9333ea]" %>
 
                 <%= button_to toggle_wishlist_event_ai_gift_suggestion_path(idea.event, idea),
                               method: :post,
-                              class: "text-xs text-red-500",
-                              form: { data: { turbo: false } } do %>
-                  Remove
+                              params: { from: "wishlist" },
+                              class: "inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-600",
+                              form: { data: { turbo: "false" } } do %>
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       viewBox="0 0 24 24"
+                       class="w-4 h-4"
+                       fill="currentColor"
+                       stroke="currentColor"
+                       stroke-width="2"
+                       stroke-linecap="round"
+                       stroke-linejoin="round">
+                    <path d="M20.8 5.5a5.5 5.5 0 0 0-7.8 0L12 6.5l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-6.7 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
+                  </svg>
+                  <span>Remove</span>
                 <% end %>
               </div>
             </div>
@@ -59,9 +74,13 @@
       </div>
     <% else %>
       <div class="bg-white rounded-3xl border border-dashed border-gray-300 px-6 py-10 text-center">
-        <p class="text-sm text-gray-500">Your wishlist is empty.</p>
+        <p class="text-sm text-gray-500 mb-2">
+          Your wishlist is empty.
+        </p>
+        <p class="text-xs text-gray-400">
+          Browse AI gift ideas for an event and tap the heart icon to save items here.
+        </p>
       </div>
     <% end %>
-
   </main>
 </div>

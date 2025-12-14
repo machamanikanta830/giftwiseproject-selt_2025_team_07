@@ -33,32 +33,19 @@ class AiGiftSuggestionsController < ApplicationController
       event_recipient: @event_recipient
     )
 
-    ideas = suggester.call(round_type: round_type)
+    fallback_used = false
 
-    # Extra safety in test: if Gemini returns nothing, still create stubs
-    if Rails.env.test? && ideas.blank?
-      ideas = generate_test_stub_ideas(@event_recipient, round_type)
+    begin
+      ideas = suggester.call(round_type: round_type)
+    rescue Ai::GeminiClient::Error
+      ideas = []
     end
 
-    flash[:notice] = "Generated #{ideas.size} ideas for #{@event_recipient.recipient.name}."
-    redirect_to event_ai_gift_suggestions_path(@event, from: params[:from])
-
-  rescue Ai::GeminiClient::Error => e
-    Rails.logger.error("Gemini error: #{e.message}")
-
-    human_message =
-      if e.message.include?("429") || e.message.include?("RESOURCE_EXHAUSTED")
-        "We’ve hit the AI rate limit for now. Please wait a bit before trying again."
-      else
-        "Sorry, we couldn't generate ideas right now. Please try again later."
-      end
-
-    if Rails.env.test?
-      ideas = generate_test_stub_ideas(@event_recipient, round_type)
-      flash[:notice] =
-        "Generated #{ideas.size} sample ideas for #{@event_recipient.recipient.name} (AI error in test)."
-    else
-      flash[:alert] = human_message
+    # Extra safety: if AI returns nothing, still create stub ideas
+    begin
+      ideas = suggester.call(round_type: round_type)
+    rescue Ai::GeminiClient::Error
+      ideas = []
     end
 
     if ideas.blank? && (Rails.env.test? || Rails.env.development?)

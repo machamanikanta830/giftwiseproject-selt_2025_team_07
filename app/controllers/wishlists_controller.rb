@@ -2,9 +2,13 @@ class WishlistsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @wishlist_items = current_user.wishlists
-                                  .includes(ai_gift_suggestion: [:event, :recipient])
-                                  .order(created_at: :desc)
+    # AI gift suggestions saved by the current user
+    @wishlist_items = AiGiftSuggestion
+                        .joins(:wishlists)
+                        .where(wishlists: { user_id: current_user.id })
+                        .includes(:event, :recipient)
+                        .order("wishlists.created_at DESC")
+                        .distinct
   end
 
   def move_to_cart
