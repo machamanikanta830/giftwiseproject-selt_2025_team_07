@@ -104,7 +104,7 @@
 
           <%= button_to recipient_path(@recipient),
                         method: :delete,
-                        form: { data: { turbo_confirm: "Remove this recipient?" } },
+                        form: { turbo_data: { turbo_confirm: "Remove this recipient?" } },
                         class: "px-4 py-2 rounded-full bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium transition" do %>
             Remove
           <% end %>
@@ -211,6 +211,7 @@
                 <%= button_to "Remove",
                               recipient_gift_idea_path(@recipient, idea),
                               method: :delete,
+                              data: { turbo_confirm: "Remove this gift idea?" },
                               class: "text-xs font-medium text-red-600 hover:text-red-800" %>
               </div>
             </turbo-frame>
@@ -237,6 +238,7 @@
                 <%= button_to "Remove",
                               recipient_gift_given_backlog_path(@recipient, gift),
                               method: :delete,
+                              data: { turbo_confirm: "Remove this gift from history?" },
                               class: "text-xs font-medium text-red-600 hover:text-red-800" %>
               </div>
             </turbo-frame>

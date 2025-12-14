@@ -10,6 +10,7 @@
         <%= button_to "Clear cart",
                       clear_cart_items_path,
                       method: :delete,
+                      data: { turbo_confirm: "Clear all items from your cart?" },
                       class: "inline-flex items-center px-4 py-2 rounded-full border border-gray-300 text-sm text-gray-700 hover:bg-gray-100",
                       form: { data: { turbo: false } } %>
 
@@ -109,6 +110,7 @@
                       <%= button_to "Remove",
                                     cart_item_path(ci),
                                     method: :delete,
+                                    data: { turbo_confirm: "Remove this item from your cart?" },
                                     class: "text-xs font-medium text-red-600 hover:text-red-700",
                                     form: { data: { turbo: false } } %>
                     </div>
