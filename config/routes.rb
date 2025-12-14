@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   # Chatbot API
   post "chatbot/message", to: "chatbots#message"
 
-  resource :profile, only: [:edit, :update]
+  resource :profile, only: [:edit, :update, :destroy]
 
   resource :password, only: [:edit, :update]
 

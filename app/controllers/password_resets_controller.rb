@@ -1,18 +1,19 @@
+# app/controllers/password_resets_controller.rb
 class PasswordResetsController < ApplicationController
   def new
   end
 
   def create
-    user = User.find_by(email: params[:email]&.downcase)
+    email = params[:email].to_s.strip.downcase
+    user  = User.find_by(email: email)
 
     if user
       token = user.generate_password_reset_token!
       PasswordResetMailer.reset_email(user, token).deliver_now
-      flash[:notice] = "Password reset instructions have been sent to #{params[:email]}"
-      redirect_to login_path
+      redirect_to login_path, notice: "Password reset instructions have been sent to #{email}"
     else
       flash.now[:alert] = "No account found with that email address"
-      render :new, status: :unprocessable_content
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -20,11 +21,9 @@ class PasswordResetsController < ApplicationController
     @token = PasswordResetToken.find_by(token: params[:token])
 
     if @token.nil? || @token.used
-      flash[:alert] = "Invalid or expired password reset link"
-      redirect_to login_path
+      redirect_to login_path, alert: "Invalid or expired password reset link" and return
     elsif @token.expired?
-      flash[:alert] = "This password reset link has expired. Please request a new one."
-      redirect_to forgot_password_path
+      redirect_to forgot_password_path, alert: "This password reset link has expired. Please request a new one." and return
     end
   end
 
@@ -32,22 +31,19 @@ class PasswordResetsController < ApplicationController
     @token = PasswordResetToken.find_by(token: params[:token])
 
     if @token.nil? || @token.used || @token.expired?
-      flash[:alert] = "Invalid or expired password reset link"
-      redirect_to login_path
-      return
+      redirect_to login_path, alert: "Invalid or expired password reset link" and return
     end
 
     user = @token.user
-    user.password = params[:user][:password]
-    user.password_confirmation = params[:user][:password_confirmation]
+    user.password              = params.dig(:user, :password)
+    user.password_confirmation = params.dig(:user, :password_confirmation)
 
     if user.save
       @token.mark_as_used!
-      flash[:notice] = "Password successfully reset. Please log in with your new password."
-      redirect_to login_path
+      redirect_to login_path, notice: "Password successfully reset. Please log in with your new password."
     else
       flash.now[:alert] = user.errors.full_messages.first
-      render :edit, status: :unprocessable_content
+      render :edit, status: :unprocessable_entity
     end
   end
 end

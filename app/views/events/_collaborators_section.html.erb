@@ -71,7 +71,8 @@
                 <%= form_with url: event_collaborator_path(@event, collab),
                               method: :patch,
                               local: true,
-                              class: "flex items-center gap-2" do |f| %>
+                              class: "flex items-center gap-2",
+                              data: { controller: "confirm-submit", action: "submit->confirm-submit#confirm", "confirm-submit-message-value": "Update this collaborator’s role?" } do |f| %>
                   <%= f.select :role,
                                [["Co-Planner", Collaborator::ROLE_CO_PLANNER],
                                 ["Viewer", Collaborator::ROLE_VIEWER]],
@@ -116,7 +117,13 @@
       <div class="p-4 border border-dashed border-gray-300 rounded-2xl bg-gray-50 mb-4">
         <h4 class="text-sm font-semibold mb-3">Invite a collaborator</h4>
 
-        <%= form_with url: event_collaborators_path(@event), scope: :collaborator, method: :post, local: true do |f| %>
+        <%= form_with url: event_collaborators_path(@event),
+                      scope: :collaborator,
+                      method: :post,
+                      local: true,
+                      data: { controller: "confirm-submit",
+                              action: "submit->confirm-submit#confirm",
+                              "confirm-submit-message-value": "Send this collaborator invite?" } do |f| %>
           <div class="flex flex-col gap-3">
 
             <!-- Row 1: Email OR Friend -->
@@ -193,13 +200,14 @@
             </p>
             <div class="flex flex-wrap gap-2">
               <% friend_candidates.each do |friend| %>
-                <%= button_to "#{friend.name}",
+                <%= button_to friend.name,
                               event_collaborators_path(
                                 @event,
                                 email: friend.email,
-                                role:  Collaborator::ROLE_CO_PLANNER
+                                role: Collaborator::ROLE_CO_PLANNER
                               ),
                               method: :post,
+                              data: { turbo_confirm: "Add #{friend.name} as a collaborator?" },
                               class: "px-3 py-1 rounded-full text-xs bg-gray-100 hover:bg-gray-200 text-gray-700" %>
               <% end %>
             </div>
