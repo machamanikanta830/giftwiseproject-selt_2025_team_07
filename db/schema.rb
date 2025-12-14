@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_14_074628) do
   create_table "ai_gift_suggestions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "event_id", null: false
@@ -34,7 +34,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
   end
 
   create_table "audit_logs", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.integer "user_id"
     t.string "resource_type"
     t.integer "resource_id"
     t.string "action"
@@ -42,6 +42,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
     t.text "new_value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.text "details"
+    t.string "event_type", default: "resource_audit"
+    t.index ["action"], name: "index_audit_logs_on_action"
+    t.index ["created_at"], name: "index_audit_logs_on_created_at"
+    t.index ["event_type"], name: "index_audit_logs_on_event_type"
+    t.index ["ip_address"], name: "index_audit_logs_on_ip_address"
+    t.index ["user_id", "action"], name: "index_audit_logs_on_user_id_and_action"
     t.index ["user_id"], name: "index_audit_logs_on_user_id"
   end
 
@@ -75,6 +84,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
     t.integer "quantity", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "unit_price", precision: 10, scale: 2
     t.index ["ai_gift_suggestion_id"], name: "index_cart_items_on_ai_gift_suggestion_id"
     t.index ["cart_id", "ai_gift_suggestion_id"], name: "index_cart_items_on_cart_id_and_ai_gift_suggestion_id", unique: true
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
@@ -234,6 +244,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
     t.integer "quantity", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "unit_price", precision: 10, scale: 2
     t.index ["ai_gift_suggestion_id"], name: "index_order_items_on_ai_gift_suggestion_id"
     t.index ["event_id"], name: "index_order_items_on_event_id"
     t.index ["order_id"], name: "index_order_items_on_order_id"
@@ -308,7 +319,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
     t.text "dislikes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "failed_login_attempts", default: 0, null: false
+    t.datetime "locked_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["failed_login_attempts"], name: "index_users_on_failed_login_attempts"
+    t.index ["locked_at"], name: "index_users_on_locked_at"
   end
 
   create_table "wishlists", force: :cascade do |t|

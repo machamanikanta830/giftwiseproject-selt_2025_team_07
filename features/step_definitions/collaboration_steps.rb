@@ -93,3 +93,57 @@ When("I accept the collaboration for {string} on event {string}") do |email, eve
   # We hit the controller endpoint directly (RackTest driver).
   page.driver.submit :post, accept_collaboration_request_path(collab.id), {}
 end
+
+When('I fill in {string} with {string}') do |field, value|
+  fill_in field, with: value
+end
+
+When('I select {string} from {string}') do |value, field|
+  select value, from: field
+end
+
+When('I press {string}') do |button|
+  click_button button
+end
+
+Then('{string} should receive an email') do |email|
+  expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(email)
+end
+
+Then('{string} should receive an email with subject {string}') do |email, subject|
+  mail = ActionMailer::Base.deliveries.find { |m| m.to.include?(email) }
+  expect(mail).not_to be_nil
+  expect(mail.subject).to eq(subject)
+end
+
+When('{string} opens the email') do |email|
+  @current_email = ActionMailer::Base.deliveries.find { |m| m.to.include?(email) }
+  expect(@current_email).not_to be_nil
+end
+
+When('they click the {string} link in the email') do |link_text|
+  expect(@current_email).not_to be_nil
+  html_body = @current_email.html_part.body.to_s
+  doc = Nokogiri::HTML(html_body)
+  link = doc.css('a').find { |a| a.text.include?(link_text) }
+  expect(link).not_to be_nil
+  visit link['href']
+end
+
+When('they click {string}') do |link_text|
+  click_link link_text
+end
+
+When('they fill in the following:') do |table|
+  table.rows_hash.each do |field, value|
+    fill_in field, with: value
+  end
+end
+
+When('{int} days pass') do |days|
+  travel days.days
+end
+
+After do
+  travel_back
+end

@@ -23,10 +23,9 @@ Rails.application.routes.draw do
   get "/ai_gift_library", to: "ai_gift_suggestions#library", as: :ai_gift_library
   get "chatbot", to: "chatbots#show"
 
-  # Chatbot API
   post "chatbot/message", to: "chatbots#message"
 
-  resource :profile, only: [:edit, :update]
+  resource :profile, only: [:edit, :update, :destroy]
 
   resource :password, only: [:edit, :update]
 
@@ -55,43 +54,6 @@ Rails.application.routes.draw do
       end
     end
 
-    member do
-      post :add_recipient
-      delete :remove_recipient
-    end
-  end
-
-  resources :wishlists, only: [:index]
-
-  # ========================================
-  # DIRECT MESSAGING ROUTES
-  # ========================================
-
-  # Friendships routes
-  resources :friendships, only: [:index, :create, :destroy] do
-    member do
-      patch :accept
-      delete :reject
-    end
-  end
-  # Messages routes
-  resources :messages, only: [:index, :create] do
-    collection do
-      get :conversations
-      delete :clear, to: 'messages#clear', as: 'clear'  # Clear chat action
-    end
-  end
-  # ActionCable mount for real-time messaging
-  mount ActionCable.server => '/cable'
-
-  #collaborations
-  resources :events do
-    resources :ai_gift_suggestions, only: [:index, :create] do
-      member do
-        post :toggle_wishlist
-      end
-    end
-
     resources :collaborators, only: [:create, :update, :destroy]
 
     member do
@@ -100,6 +62,28 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :wishlists, only: [:index] do
+    member do
+      post :move_to_cart
+    end
+  end
+
+  resources :friendships, only: [:index, :create, :destroy] do
+    member do
+      patch :accept
+      delete :reject
+    end
+  end
+
+  resources :messages, only: [:index, :create] do
+    collection do
+      get :conversations
+      delete :clear, to: 'messages#clear', as: 'clear'
+    end
+  end
+
+  mount ActionCable.server => '/cable'
+
   resources :collaboration_requests, only: [:index] do
     member do
       post   :accept
@@ -107,10 +91,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'invites/:token/accept', to: 'collaboration_invites#accept', as: :accept_collaboration_invite
 
-  # ak
-
-  # Cart
   resource :cart, only: [:show]
   resources :cart_items, only: [:create, :destroy] do
     collection do
@@ -119,24 +101,12 @@ Rails.application.routes.draw do
     end
   end
 
-  # Orders
   resources :orders, only: [:index, :show, :create] do
     member do
       patch :cancel
       patch :deliver
     end
   end
-
-
-  # ak
-  resources :wishlists, only: [:index] do
-    member do
-      post :move_to_cart
-    end
-  end
-
-
-
 
   get "up" => "rails/health#show", as: :rails_health_check
 end

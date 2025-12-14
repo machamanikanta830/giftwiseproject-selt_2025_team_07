@@ -10,11 +10,6 @@
     </div>
 
     <%= form_with url: forgot_password_path, method: :post, local: true, class: "mt-8 space-y-6" do |f| %>
-      <% if flash[:alert] %>
-        <div class="rounded-md bg-red-50 p-4">
-          <p class="text-sm text-red-800"><%= flash[:alert] %></p>
-        </div>
-      <% end %>
 
       <div class="rounded-md shadow-sm -space-y-px">
         <div>

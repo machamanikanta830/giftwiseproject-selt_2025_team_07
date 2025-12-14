@@ -42,6 +42,26 @@
       </div>
     </div>
 
+
+
+    <% total =
+         @items.sum do |it|
+           it.unit_price.present? ? (it.unit_price * it.quantity) : 0
+         end %>
+
+    <div class="bg-white rounded-3xl border border-gray-200 p-5 mb-6 flex items-center justify-between">
+      <p class="text-sm text-gray-600">Order total (known prices only)</p>
+      <p class="text-lg font-semibold text-gray-900"><%= number_to_currency(total) %></p>
+    </div>
+
+
+
+
+
+
+
+
+
     <div class="bg-white rounded-3xl border border-gray-200 p-5 mb-6">
       <p class="text-sm font-semibold mb-2">Delivery info</p>
       <p class="text-sm text-gray-700 whitespace-pre-line"><%= @order.delivery_address.presence || "Not provided" %></p>
@@ -92,7 +112,28 @@
                   <p class="text-xs text-gray-400 mb-1"><%= item.event.event_name %> • <%= item.recipient.name %></p>
                   <h3 class="font-semibold text-sm mb-1"><%= item.title %></h3>
                   <p class="text-xs text-gray-600 mb-2 flex-1"><%= truncate(item.description.to_s, length: 120) %></p>
-                  <p class="text-[11px] text-gray-500"><%= item.estimated_price.to_s %></p>
+
+
+
+
+
+                  <div class="text-[11px] text-gray-500 space-y-0.5">
+                    <% if item.unit_price.present? %>
+                      <div>Price: <%= number_to_currency(item.unit_price) %></div>
+                      <div class="font-semibold text-gray-700">
+                        Subtotal: <%= number_to_currency(item.unit_price * item.quantity) %>
+                      </div>
+                    <% else %>
+                      <div>Price: <%= item.estimated_price.to_s %></div>
+                    <% end %>
+                  </div>
+
+
+
+
+
+
+
                 </div>
               </div>
             <% end %>

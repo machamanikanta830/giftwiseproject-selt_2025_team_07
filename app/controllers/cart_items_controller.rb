@@ -5,16 +5,23 @@ class CartItemsController < ApplicationController
     cart = Cart.for(current_user)
     suggestion = AiGiftSuggestion.find(params[:ai_gift_suggestion_id])
 
-    # Only allow if the event is accessible to current_user
     Event.accessible_to(current_user).find(suggestion.event_id)
 
-    CartItem.find_or_create_by!(
+    avg_price = suggestion.average_estimated_price
+
+    item = CartItem.find_or_create_by!(
       cart: cart,
       ai_gift_suggestion: suggestion
     ) do |ci|
       ci.recipient_id = suggestion.recipient_id
       ci.event_id = suggestion.event_id
       ci.quantity = 1
+      ci.unit_price = avg_price
+    end
+
+    # if it already existed but had no price, fill it
+    if item.unit_price.nil? && avg_price.present?
+      item.update!(unit_price: avg_price)
     end
 
     redirect_back fallback_location: cart_path, notice: "Added to cart."
@@ -31,16 +38,25 @@ class CartItemsController < ApplicationController
 
     created = 0
     suggestions.each do |s|
+      avg_price = s.average_estimated_price
+
       item = CartItem.find_or_create_by(cart: cart, ai_gift_suggestion: s) do |ci|
         ci.recipient_id = s.recipient_id
         ci.event_id = s.event_id
         ci.quantity = 1
+        ci.unit_price = avg_price
       end
+
+      if item.unit_price.nil? && avg_price.present?
+        item.update!(unit_price: avg_price)
+      end
+
       created += 1 if item.persisted?
     end
 
     redirect_to cart_path, notice: "Added #{created} item(s) to cart."
   end
+
 
   def destroy
     cart = Cart.for(current_user)

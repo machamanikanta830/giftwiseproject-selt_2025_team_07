@@ -101,6 +101,7 @@
                             recipient_path(recipient),
                             method: :delete,
                             form: { class: "inline-block" },
+                            data: { turbo_confirm: "Remove #{recipient.name}?" },
                             class: "inline-flex items-center rounded-full border border-red-200 px-3 py-1 text-xs font-medium text-red-600 hover:bg-red-50",
                             onclick: "event.stopPropagation();" %>
 

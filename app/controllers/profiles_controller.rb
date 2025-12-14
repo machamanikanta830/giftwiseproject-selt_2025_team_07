@@ -20,6 +20,13 @@ class ProfilesController < ApplicationController
     end
   end
 
+  def destroy
+    user = current_user
+    reset_session            # logs out + clears session
+    user.destroy             # dependent: :destroy takes care of associations
+    redirect_to root_path, notice: "Your account has been deleted."
+  end
+
   private
 
   def set_user
