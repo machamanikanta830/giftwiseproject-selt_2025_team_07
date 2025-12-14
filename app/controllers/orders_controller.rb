@@ -54,7 +54,7 @@ class OrdersController < ApplicationController
         title: s.title,
         description: s.description,
         estimated_price: s.estimated_price,
-        unit_price: ci.unit_price,          # ✅ NEW (numeric)
+        unit_price: ci.unit_price,          #   NEW (numeric)
         category: s.category,
         image_url: s.image_url
       )

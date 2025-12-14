@@ -219,16 +219,16 @@ After installation:
 
 ## Success Criteria
 
-✅ Can send friend requests
-✅ Can accept/reject requests
-✅ Can view friends list
-✅ Can start chat with friend
-✅ Messages appear instantly
-✅ Unread counts update
-✅ Online status shows correctly
-✅ Chat icon visible (when have friends)
-✅ Can click icon to see friends
-✅ Can navigate to any conversation
+  Can send friend requests
+  Can accept/reject requests
+  Can view friends list
+  Can start chat with friend
+  Messages appear instantly
+  Unread counts update
+  Online status shows correctly
+  Chat icon visible (when have friends)
+  Can click icon to see friends
+  Can navigate to any conversation
 
 ---
 

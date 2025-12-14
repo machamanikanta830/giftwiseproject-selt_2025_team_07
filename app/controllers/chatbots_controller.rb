@@ -40,7 +40,7 @@ class ChatbotsController < ApplicationController
     when "reset"
       session[:chatbot_history] = [
         bot_msg(
-          "Conversation restarted ✅\n\n" \
+          "Conversation restarted  \n\n" \
             "Hi again! I can help with upcoming events, recipients, wishlist and budgets.\n" \
             "Tap one of the suggestions below to get started."
         )

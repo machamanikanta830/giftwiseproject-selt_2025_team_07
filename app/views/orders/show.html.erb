@@ -31,11 +31,11 @@
     <div class="bg-white rounded-3xl border border-gray-200 p-5 mb-6">
       <p class="text-sm font-semibold mb-2">Tracking</p>
       <div class="text-sm text-gray-700 space-y-1">
-        <div>✅ Placed: <%= @order.placed_at&.strftime("%b %d, %Y %I:%M %p") || @order.created_at.strftime("%b %d, %Y") %></div>
+        <div>  Placed: <%= @order.placed_at&.strftime("%b %d, %Y %I:%M %p") || @order.created_at.strftime("%b %d, %Y") %></div>
         <% if @order.delivered_at.present? %>
-          <div>✅ Delivered: <%= @order.delivered_at.strftime("%b %d, %Y %I:%M %p") %></div>
+          <div>  Delivered: <%= @order.delivered_at.strftime("%b %d, %Y %I:%M %p") %></div>
         <% elsif @order.cancelled_at.present? %>
-          <div>❌ Cancelled: <%= @order.cancelled_at.strftime("%b %d, %Y %I:%M %p") %></div>
+          <div>   Cancelled: <%= @order.cancelled_at.strftime("%b %d, %Y %I:%M %p") %></div>
         <% else %>
           <div>⏳ Delivery: pending (COD)</div>
         <% end %>
