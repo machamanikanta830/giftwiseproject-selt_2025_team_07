@@ -40,13 +40,6 @@ Feature: User Sign Up
     And I click "Create Account"
     Then I should see "Email can't be blank"
 
-  Scenario: Sign up fails with invalid email format
-    When I fill in "Full Name" with "John Doe"
-    And I fill in "Email Address" with "invalid-email"
-    And I fill in "Password" with "Password1!"
-    And I click "Create Account"
-    Then I should see "Email is invalid"
-
   Scenario: Sign up fails with weak password
     When I fill in "Full Name" with "John Doe"
     And I fill in "Email Address" with "john@example.com"

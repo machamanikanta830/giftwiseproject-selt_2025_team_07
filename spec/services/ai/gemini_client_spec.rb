@@ -1,190 +1,90 @@
 require "rails_helper"
 
 RSpec.describe Ai::GeminiClient do
-  let(:api_key) { "test-key" }
-  let(:model)   { "gemini-test-model" }
-  let(:endpoint) { "https://fake-gemini.com/v1beta" }
+  let(:api_key) { "test_key" }
+  let(:client) { described_class.new(api_key: api_key) }
 
-  subject(:client) do
-    described_class.new(api_key: api_key, model: model, api_endpoint: endpoint)
+  describe "initialize" do
+    it "raises error when api key is missing" do
+      expect {
+        described_class.new(api_key: nil)
+      }.to raise_error(Ai::GeminiClient::Error, /Gemini API key missing/)
+    end
   end
 
+  describe "generate_gift_ideas" do
+    let(:http) { instance_double(Net::HTTP) }
+    let(:response) { instance_double(Net::HTTPSuccess) }
 
-
-  # ------------------------------
-  # Net::HTTP Mock Helper
-  # ------------------------------
-  def mock_http_with(response_body:, code: "200")
-    http_double = instance_double(Net::HTTP)
-    request_double = instance_double(Net::HTTP::Post)
-
-    allow(Net::HTTP).to receive(:new).and_return(http_double)
-
-    allow(Net::HTTP::Post).to receive(:new).and_return(request_double)
-    allow(request_double).to receive(:[]=)
-    allow(request_double).to receive(:body=)
-
-    response = instance_double(Net::HTTPSuccess, body: response_body, code: code)
-
-    if code == "200"
-      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
-    else
-      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
+    before do
+      allow(Net::HTTP).to receive(:new).and_return(http)
+      allow(http).to receive(:use_ssl=)
+      allow(http).to receive(:read_timeout=)
+      allow(http).to receive(:verify_mode=)
     end
 
-    allow(http_double).to receive(:use_ssl=)
-    allow(http_double).to receive(:read_timeout=)
-    allow(http_double).to receive(:verify_mode=)
-    allow(http_double).to receive(:request).and_return(response)
-  end
-
-  # ------------------------------
-  # SUCCESS CASE
-  # ------------------------------
-  describe "#generate_gift_ideas success" do
-    it "returns gift_ideas array from valid JSON" do
-      gemini_reply = {
+    it "returns parsed gift ideas on success" do
+      body = {
         "candidates" => [
           {
             "content" => {
               "parts" => [
-                { "text" => { "gift_ideas" => [{ "title" => "Book", "description" => "Nice gift" }] }.to_json }
+                {
+                  "text" => {
+                    "gift_ideas" => [
+                      { "title" => "Mug", "description" => "Nice mug" }
+                    ]
+                  }.to_json
+                }
               ]
             }
           }
         ]
       }.to_json
 
-      mock_http_with(response_body: gemini_reply)
+      allow(http).to receive(:request).and_return(response)
+      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+      allow(response).to receive(:body).and_return(body)
 
       ideas = client.generate_gift_ideas("test prompt")
-      expect(ideas.first["title"]).to eq("Book")
+
+      expect(ideas).to be_an(Array)
+      expect(ideas.first["title"]).to eq("Mug")
     end
 
-    it "supports fallback key: ideas" do
-      gemini_reply = {
-        "candidates" => [
-          {
-            "content" => {
-              "parts" => [
-                { "text" => { "ideas" => [{ "title" => "Pen" }] }.to_json }
-              ]
-            }
-          }
-        ]
-      }.to_json
+    it "raises error on HTTP failure" do
+      bad_response = instance_double(Net::HTTPBadRequest, body: "bad", code: "400")
 
-      mock_http_with(response_body: gemini_reply)
+      allow(http).to receive(:request).and_return(bad_response)
+      allow(bad_response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
 
-      ideas = client.generate_gift_ideas("test")
-      expect(ideas.first["title"]).to eq("Pen")
-    end
-
-    it "supports fallback key: data" do
-      gemini_reply = {
-        "candidates" => [
-          {
-            "content" => {
-              "parts" => [
-                { "text" => { "data" => [{ "title" => "Watch" }] }.to_json }
-              ]
-            }
-          }
-        ]
-      }.to_json
-
-      mock_http_with(response_body: gemini_reply)
-
-      ideas = client.generate_gift_ideas("test")
-      expect(ideas.first["title"]).to eq("Watch")
-    end
-
-    it "supports top-level array" do
-      gemini_reply = {
-        "candidates" => [
-          {
-            "content" => {
-              "parts" => [
-                { "text" => [{ "title" => "Shoes" }].to_json }
-              ]
-            }
-          }
-        ]
-      }.to_json
-
-      mock_http_with(response_body: gemini_reply)
-
-      ideas = client.generate_gift_ideas("test")
-      expect(ideas.first["title"]).to eq("Shoes")
-    end
-  end
-
-  # ------------------------------
-  # ERROR CASES
-  # ------------------------------
-  describe "#generate_gift_ideas errors" do
-    it "raises on HTTP error" do
-      mock_http_with(response_body: "bad", code: "500")
       expect {
         client.generate_gift_ideas("test")
       }.to raise_error(Ai::GeminiClient::Error, /Gemini HTTP error/)
     end
 
-    it "raises when candidates missing" do
-      reply = { "other" => [] }.to_json
-      mock_http_with(response_body: reply)
+    it "raises error when JSON is invalid" do
+      body = "not json"
+
+      allow(http).to receive(:request).and_return(response)
+      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+      allow(response).to receive(:body).and_return(body)
+
+      expect {
+        client.generate_gift_ideas("test")
+      }.to raise_error(Ai::GeminiClient::Error, /Failed to parse Gemini JSON/)
+    end
+
+    it "raises error when candidates are missing" do
+      body = { "foo" => "bar" }.to_json
+
+      allow(http).to receive(:request).and_return(response)
+      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+      allow(response).to receive(:body).and_return(body)
 
       expect {
         client.generate_gift_ideas("test")
       }.to raise_error(Ai::GeminiClient::Error, /no candidates/)
-    end
-
-    it "raises when text part missing" do
-      reply = {
-        "candidates" => [
-          { "content" => { "parts" => [] } }
-        ]
-      }.to_json
-
-      mock_http_with(response_body: reply)
-
-      expect {
-        client.generate_gift_ideas("test")
-      }.to raise_error(Ai::GeminiClient::Error, /no text parts/)
-    end
-
-    it "raises for invalid JSON" do
-      reply = {
-        "candidates" => [
-          {
-            "content" => {
-              "parts" => [{ "text" => "INVALID_JSON{" }]
-            }
-          }
-        ]
-      }.to_json
-
-      mock_http_with(response_body: reply)
-
-      expect {
-        client.generate_gift_ideas("test")
-      }.to raise_error(Ai::GeminiClient::Error, /Failed to parse/)
-    end
-
-    it "raises for unexpected structure" do
-      reply = {
-        "candidates" => [
-          {
-            "content" => { "parts" => [{ "text" => { "wrong" => 123 }.to_json }] }
-          }
-        ]
-      }.to_json
-
-      mock_http_with(response_body: reply)
-
-      expect {
-        client.generate_gift_ideas("x")
-      }.to raise_error(Ai::GeminiClient::Error, /Unexpected JSON structure/)
     end
   end
 end

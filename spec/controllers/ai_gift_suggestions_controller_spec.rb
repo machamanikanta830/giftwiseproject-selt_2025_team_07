@@ -126,6 +126,7 @@ RSpec.describe AiGiftSuggestionsController, type: :controller do
 
       expect(response).to redirect_to("/back")
     end
+  end
 
     it "when not saved: creates wishlists for all planners (owner + accepted co-planner/owner)" do
       suggestion = make_suggestion(title: "NewSave")

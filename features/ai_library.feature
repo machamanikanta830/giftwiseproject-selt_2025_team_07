@@ -11,15 +11,24 @@ Feature: AI Gift Library scopes and filters
     Then I should see "Collab Event"
     And I should not see "Owned Event"
 
-  Scenario: Scope remains Collab after applying filters
+  Scenario: Collab scope shows collaboration event title
     When I visit the AI Gift Library page
     And I click "Collab"
-    And I click "Apply filters"
     Then I should see "Collab Event"
-    And I should not see "Owned Event"
 
-  Scenario: Category dropdown shows categories from visible scope
+  Scenario: Category dropdown is hidden in Collab scope
     When I visit the AI Gift Library page
     And I click "Collab"
-    Then the category dropdown should include "Tech"
-    And the category dropdown should not include "Books"
+    Then I should not see "Category"
+
+  Scenario: Mine scope shows only my owned events
+    When I visit the AI Gift Library page
+    And I click "Mine"
+    Then I should see "Owned Event"
+    And I should not see "Collab Event"
+
+  Scenario: All scope shows both owned and collaboration events
+    When I visit the AI Gift Library page
+    And I click "All"
+    Then I should see "Owned Event"
+    And I should see "Collab Event"

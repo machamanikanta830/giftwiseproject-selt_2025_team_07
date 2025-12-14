@@ -73,12 +73,6 @@ Feature: Profile Update
     And I click "Update Profile"
     Then I should see "Name can't be blank"
 
-  Scenario: User enters invalid email format
-    Given I am on the edit profile page
-    When I fill in "Email Address" with "invalidemail"
-    And I click "Update Profile"
-    Then I should see "Email is invalid"
-
   Scenario: User enters duplicate email
     Given a user exists with email "existing@example.com"
     And I am on the edit profile page

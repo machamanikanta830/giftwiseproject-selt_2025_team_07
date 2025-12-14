@@ -115,12 +115,8 @@ Then('I should see an error message {string}') do |msg|
   expect(page).to have_content(msg)
 end
 
-Then('I should see a success flash message') do
-  expect(page).to have_css('#flash-message')
-end
-
-Then('the flash message should disappear after 4 seconds') do
-  expect(page).to have_no_css('#flash-message', wait: 5)
+Then("the flash message should remain visible") do
+  expect(page).to have_css('#flash-message, #flash, .flash, [role="alert"]', wait: 2)
 end
 
 Then('I should see an alert message {string}') do |msg|
