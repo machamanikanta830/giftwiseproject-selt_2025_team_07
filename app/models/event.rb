@@ -7,6 +7,7 @@ class Event < ApplicationRecord
 
   has_many :collaborators, dependent: :destroy
   has_many :collaborating_users, through: :collaborators, source: :user
+  has_many :collaboration_invites, dependent: :destroy
 
   validates :event_name, presence: true
   validates :event_date, presence: true
