@@ -13,7 +13,7 @@ RSpec.describe "Cart", type: :request do
       email: "john@example.com"
     )
   end
-  let!(:event_recipient) { EventRecipient.create!(event: event, recipient: recipient) }
+  let!(:event_recipient) { EventRecipient.create!(user: user, event: event, recipient: recipient) }
 
   let!(:idea) do
     AiGiftSuggestion.create!(

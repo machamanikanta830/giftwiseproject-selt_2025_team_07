@@ -11,25 +11,21 @@ RSpec.describe AiGiftSuggestionsController, type: :request do
     user.recipients.create!(
       name: "Sam",
       relationship: "Friend",
-      email: "sam@example.com"
+      email: "sam-#{SecureRandom.hex(6)}@example.com"
     )
   end
 
   let!(:event_recipient) do
-    Recipient.create!(
-      name: "Sam",
-      relationship: "Friend",
+    EventRecipient.create!(
       user: user,
-      email: "sam@example.com"
+      event: event,
+      recipient: recipient
     )
   end
 
   before do
-    allow_any_instance_of(ApplicationController)
-      .to receive(:authenticate_user!).and_return(true)
-
-    allow_any_instance_of(ApplicationController)
-      .to receive(:current_user).and_return(user)
+    allow_any_instance_of(ApplicationController).to receive(:authenticate_user!).and_return(true)
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
   end
 
   # --------------------------------------------------------
