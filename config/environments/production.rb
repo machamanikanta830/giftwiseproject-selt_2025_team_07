@@ -20,6 +20,8 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
   config.active_record.dump_schema_after_migration = false
 
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
+
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
@@ -29,12 +31,12 @@ Rails.application.configure do
   }
 
   config.action_mailer.smtp_settings = {
-    address: 'smtp.sendgrid.net',
-    port: 587,
-    domain: ENV['APP_DOMAIN'] || 'your-app-name.herokuapp.com',
-    user_name: 'apikey',
-    password: ENV['SENDGRID_API_KEY'],
-    authentication: :plain,
-    enable_starttls_auto: true
+    address: 'smtp.resend.com',
+    port: 465,
+    domain: ENV['APP_DOMAIN'] || 'giftwise-chintu-e0dbeab5137d.herokuapp.com',
+    user_name: 'resend',
+    password: ENV['RESEND_API_KEY'],
+    authentication: 'plain',
+    tls: true
   }
 end

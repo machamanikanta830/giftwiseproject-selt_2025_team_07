@@ -1,0 +1,28 @@
+GiftWise Collaboration Invite
+==============================
+
+Hi there,
+
+<%= @inviter.name %> has invited you to collaborate on their GiftWise event:
+
+Event: <%= @event.event_name %>
+<% if @event.event_date.present? %>Date: <%= @event.event_date.strftime("%B %d, %Y") %><% end %>
+Role: <%= @invite.role == Collaborator::ROLE_CO_PLANNER ? 'Co-Planner' : 'Viewer' %>
+
+As a <%= @invite.role == Collaborator::ROLE_CO_PLANNER ? 'Co-Planner' : 'Viewer' %>, you'll be able to:
+<% @role_permissions.each do |permission| %>
+  - <%= permission %>
+<% end %>
+
+Accept this invitation:
+<%= @accept_url %>
+
+Important:
+- You'll need a GiftWise account to accept this invitation
+- If you don't have an account, you'll be asked to sign up first
+- This invitation expires in 14 days
+
+If you didn't expect this invitation, you can safely ignore this email.
+
+— The GiftWise Team
+Making gift planning easier, together.

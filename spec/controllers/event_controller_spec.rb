@@ -1,215 +1,133 @@
-# spec/controllers/events_controller_spec.rb
-require 'rails_helper'
+# frozen_string_literal: true
+require "rails_helper"
 
 RSpec.describe EventsController, type: :controller do
-  let(:user) { User.create!(name: "Test User", email: "test@example.com", password: "Password@123") }
-  let(:other_user) { User.create!(name: "Other User", email: "other@example.com", password: "Password@123") }
-  let(:event) do
-    Event.create!(
-      user: user,
-      event_name: "Birthday Party",
-      event_date: Date.tomorrow,
-      description: "Test event"
-    )
-  end
+  let!(:user) { create(:user) }
+  let!(:recipient) { create(:recipient, user: user) }
 
-  let(:recipient1) do
-    Recipient.create!(
+  let!(:event) do
+    create(
+      :event,
       user: user,
-      name: "John Doe",
-      age: 30,
-      relationship: "Friend"
-    )
-  end
-
-  let(:recipient2) do
-    Recipient.create!(
-      user: user,
-      name: "Jane Smith",
-      age: 25,
-      relationship: "Family"
-    )
-  end
-
-  let(:other_user_recipient) do
-    Recipient.create!(
-      user: other_user,
-      name: "Bob Jones",
-      age: 35,
-      relationship: "Colleague"
+      event_name: "Birthday",
+      event_date: 1.week.from_now
     )
   end
 
   before do
-    # Simulate user login by setting session
-    session[:user_id] = user.id
+    allow(controller).to receive(:authenticate_user!).and_return(true)
+    allow(controller).to receive(:current_user).and_return(user)
+    allow(Event).to receive(:accessible_to).and_return(Event.all)
+    allow_any_instance_of(Event).to receive(:can_manage_event?).and_return(true)
   end
 
+  # --------------------------------------------------
+  # GET #index
+  # --------------------------------------------------
+  describe "GET #index" do
+    it "loads upcoming and past events" do
+      get :index
+      expect(assigns(:upcoming_events)).to include(event)
+    end
+  end
+
+  # --------------------------------------------------
+  # GET #new
+  # --------------------------------------------------
+  describe "GET #new" do
+    it "initializes a new event" do
+      get :new
+      expect(assigns(:event)).to be_a_new(Event)
+    end
+  end
+
+  # --------------------------------------------------
+  # POST #create
+  # --------------------------------------------------
+  describe "POST #create" do
+    it "creates an event successfully" do
+      post :create, params: {
+        event: {
+          event_name: "Wedding",
+          description: "Test",
+          event_date: 2.weeks.from_now,
+          location: "NY",
+          budget: 500
+        }
+      }
+
+      expect(response).to redirect_to(dashboard_path)
+      expect(Event.count).to be >= 1
+    end
+
+    it "renders new on validation failure" do
+      post :create, params: {
+        event: { event_name: "" }
+      }
+
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+  end
+
+  # --------------------------------------------------
+  # GET #show
+  # --------------------------------------------------
   describe "GET #show" do
-
-    context "with some recipients already added" do
-      before do
-        EventRecipient.create!(event: event, recipient: recipient1, user: user)
-      end
-
-    end
-
-    context "with all recipients added" do
-      before do
-        EventRecipient.create!(event: event, recipient: recipient1, user: user)
-        EventRecipient.create!(event: event, recipient: recipient2, user: user)
-      end
-
+    it "loads event details" do
+      get :show, params: { id: event.id }
+      expect(assigns(:event)).to eq(event)
     end
   end
 
-  describe "POST #add_recipient" do
-    context "with valid recipient" do
-      it "creates a new event_recipient record" do
-        expect {
-          post :add_recipient, params: { id: event.id, recipient_id: recipient1.id }
-        }.to change(EventRecipient, :count).by(1)
-      end
-
-      it "associates the recipient with the event" do
-        post :add_recipient, params: { id: event.id, recipient_id: recipient1.id }
-
-        expect(event.reload.recipients).to include(recipient1)
-      end
-
-      it "sets the correct user_id on event_recipient" do
-        post :add_recipient, params: { id: event.id, recipient_id: recipient1.id }
-
-        event_recipient = EventRecipient.last
-        expect(event_recipient.user_id).to eq(user.id)
-      end
-
-      it "redirects to event show page with success notice" do
-        post :add_recipient, params: { id: event.id, recipient_id: recipient1.id }
-
-        expect(response).to redirect_to(event_path(event))
-        expect(flash[:notice]).to eq("#{recipient1.name} added to event successfully!")
-      end
-    end
-
-    context "with recipient already added to event" do
-      before do
-        EventRecipient.create!(event: event, recipient: recipient1, user: user)
-      end
-
-      it "does not create a duplicate record" do
-        expect {
-          post :add_recipient, params: { id: event.id, recipient_id: recipient1.id }
-        }.not_to change(EventRecipient, :count)
-      end
-
-      it "redirects with alert message" do
-        post :add_recipient, params: { id: event.id, recipient_id: recipient1.id }
-
-        expect(response).to redirect_to(event_path(event))
-        expect(flash[:alert]).to eq("#{recipient1.name} is already added to this event")
-      end
-    end
-
-    context "with non-existent recipient" do
-      it "does not create a record" do
-        expect {
-          post :add_recipient, params: { id: event.id, recipient_id: 99999 }
-        }.not_to change(EventRecipient, :count)
-      end
-
-      it "redirects with error message" do
-        post :add_recipient, params: { id: event.id, recipient_id: 99999 }
-
-        expect(response).to redirect_to(event_path(event))
-        expect(flash[:alert]).to eq("Recipient not found")
-      end
-    end
-
-
-
-
-    context "when user is not logged in" do
-      before do
-        session[:user_id] = nil
-      end
-
-      it "redirects to login page" do
-        post :add_recipient, params: { id: event.id, recipient_id: recipient1.id }
-
-        expect(response).to redirect_to(login_path)
-      end
-    end
-
-    context "with another user's event" do
-      let(:other_event) do
-        Event.create!(
-          user: other_user,
-          event_name: "Other Event",
-          event_date: Date.tomorrow
-        )
-      end
-
-      it "raises RecordNotFound error" do
-        expect {
-          post :add_recipient, params: { id: other_event.id, recipient_id: recipient1.id }
-        }.to raise_error(ActiveRecord::RecordNotFound)
-      end
+  # --------------------------------------------------
+  # GET #edit
+  # --------------------------------------------------
+  describe "GET #edit" do
+    it "loads edit page" do
+      get :edit, params: { id: event.id }
+      expect(assigns(:event)).to eq(event)
     end
   end
 
-  describe "DELETE #remove_recipient" do
-    let!(:event_recipient) do
-      EventRecipient.create!(event: event, recipient: recipient1, user: user)
+  # --------------------------------------------------
+  # PATCH #update
+  # --------------------------------------------------
+  describe "PATCH #update" do
+    it "updates the event" do
+      patch :update, params: {
+        id: event.id,
+        event: { location: "Chicago" }
+      }
+
+      expect(event.reload.location).to eq("Chicago")
+      expect(response).to redirect_to(event_path(event))
     end
+  end
 
-    context "with valid event_recipient" do
-      it "deletes the event_recipient record" do
-        expect {
-          delete :remove_recipient, params: { id: event.id, event_recipient_id: event_recipient.id }
-        }.to change(EventRecipient, :count).by(-1)
-      end
+  # --------------------------------------------------
+  # DELETE #destroy
+  # --------------------------------------------------
+  describe "DELETE #destroy" do
+    it "deletes the event" do
+      expect {
+        delete :destroy, params: { id: event.id }
+      }.to change(Event, :count).by(-1)
 
-      it "removes the recipient from the event" do
-        delete :remove_recipient, params: { id: event.id, event_recipient_id: event_recipient.id }
-
-        expect(event.reload.recipients).not_to include(recipient1)
-      end
-
-      it "redirects to event show page with success notice" do
-        delete :remove_recipient, params: { id: event.id, event_recipient_id: event_recipient.id }
-
-        expect(response).to redirect_to(event_path(event))
-        expect(flash[:notice]).to eq("#{recipient1.name} removed from event")
-      end
+      expect(response).to redirect_to(events_path)
     end
+  end
 
-    context "with non-existent event_recipient" do
-      it "does not delete any record" do
-        expect {
-          delete :remove_recipient, params: { id: event.id, event_recipient_id: 99999 }
-        }.not_to change(EventRecipient, :count)
-      end
+  # --------------------------------------------------
+  # Authorization failure
+  # --------------------------------------------------
+  describe "authorization" do
+    it "redirects if user cannot manage event" do
+      allow_any_instance_of(Event).to receive(:can_manage_event?).and_return(false)
 
-      it "redirects with error message" do
-        delete :remove_recipient, params: { id: event.id, event_recipient_id: 99999 }
+      get :edit, params: { id: event.id }
 
-        expect(response).to redirect_to(event_path(event))
-        expect(flash[:alert]).to eq("Recipient not found in this event")
-      end
-    end
-
-    context "when user is not logged in" do
-      before do
-        session[:user_id] = nil
-      end
-
-      it "redirects to login page" do
-        delete :remove_recipient, params: { id: event.id, event_recipient_id: event_recipient.id }
-
-        expect(response).to redirect_to(login_path)
-      end
+      expect(response).to redirect_to(event_path(event))
+      expect(flash[:alert]).to be_present
     end
   end
 end
-

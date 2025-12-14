@@ -17,14 +17,16 @@ class Recipient < ApplicationRecord
   #   "Colleague",
   #   "Other"
   # ].freeze
+  before_validation :normalize_email
 
   validates :name, presence: true
+
+  VALID_EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\.[^@\s]+\z/
+
   validates :email,
-            format: {
-              with: URI::MailTo::EMAIL_REGEXP,
-              message: "must be a valid email address"
-            },
-            allow_blank: true
+            presence: true,
+            uniqueness: { scope: :user_id, case_sensitive: false, message: "is already added" },
+            format: { with: VALID_EMAIL_REGEX, message: "Invalid email format" }
 
   validates :age,
             numericality: { only_integer: true },
@@ -40,4 +42,11 @@ class Recipient < ApplicationRecord
   def events_with_details
     event_recipients.includes(:event)
   end
+
+  private
+
+  def normalize_email
+    self.email = email.to_s.strip.downcase
+  end
+
 end

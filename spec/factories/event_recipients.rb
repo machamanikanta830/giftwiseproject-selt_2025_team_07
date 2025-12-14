@@ -4,5 +4,6 @@ FactoryBot.define do
     association :event
     association :recipient
     budget_allocated { 0 }
+    gift_status { "planning" }
   end
 end

@@ -23,11 +23,9 @@ Rails.application.routes.draw do
   get "/ai_gift_library", to: "ai_gift_suggestions#library", as: :ai_gift_library
   get "chatbot", to: "chatbots#show"
 
-  # Chatbot API
   post "chatbot/message", to: "chatbots#message"
 
-
-  resource :profile, only: [:edit, :update]
+  resource :profile, only: [:edit, :update, :destroy]
 
   resource :password, only: [:edit, :update]
 
@@ -39,6 +37,16 @@ Rails.application.routes.draw do
     resources :gift_given_backlogs, only: [:new, :create, :destroy]
   end
 
+  resource :mfa, only: [], controller: 'mfa' do
+    get :setup
+    post :enable
+    delete :disable
+  end
+
+  resource :mfa_session, only: [:new, :create] do
+    post :verify_backup_code
+  end
+
   resources :events do
     resources :ai_gift_suggestions, only: [:index, :create] do
       member do
@@ -46,13 +54,59 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :collaborators, only: [:create, :update, :destroy]
+
     member do
       post :add_recipient
       delete :remove_recipient
     end
   end
 
-  resources :wishlists, only: [:index]
+  resources :wishlists, only: [:index] do
+    member do
+      post :move_to_cart
+    end
+  end
+
+  resources :friendships, only: [:index, :create, :destroy] do
+    member do
+      patch :accept
+      delete :reject
+    end
+  end
+
+  resources :messages, only: [:index, :create] do
+    collection do
+      get :conversations
+      delete :clear, to: 'messages#clear', as: 'clear'
+    end
+  end
+
+  mount ActionCable.server => '/cable'
+
+  resources :collaboration_requests, only: [:index] do
+    member do
+      post   :accept
+      delete :reject
+    end
+  end
+
+  get 'invites/:token/accept', to: 'collaboration_invites#accept', as: :accept_collaboration_invite
+
+  resource :cart, only: [:show]
+  resources :cart_items, only: [:create, :destroy] do
+    collection do
+      post :bulk_create_from_wishlist
+      delete :clear
+    end
+  end
+
+  resources :orders, only: [:index, :show, :create] do
+    member do
+      patch :cancel
+      patch :deliver
+    end
+  end
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
