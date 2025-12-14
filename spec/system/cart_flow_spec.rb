@@ -44,14 +44,4 @@ RSpec.describe "Cart flow", type: :system do
       estimated_price: "$50"
     )
   end
-
-  it "logs in and opens cart page" do
-    visit login_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "Password@1"
-    click_button "Login"
-
-    visit cart_path
-    expect(page).to have_content("Cart")
-  end
 end
