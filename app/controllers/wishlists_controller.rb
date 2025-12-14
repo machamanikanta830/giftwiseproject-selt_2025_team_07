@@ -2,12 +2,11 @@ class WishlistsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    # Return AiGiftSuggestion rows + ALSO expose wishlist row id as wishlist_id
     @wishlist_items =
       AiGiftSuggestion
         .joins(:wishlists)
         .where(wishlists: { user_id: current_user.id })
-        .select("ai_gift_suggestions.*, wishlists.id AS wishlist_id")
+        .select("ai_gift_suggestions.*, wishlists.id AS wishlist_id, wishlists.created_at AS wishlist_created_at")
         .includes(:event, :recipient)
         .order("wishlists.created_at DESC")
         .distinct
