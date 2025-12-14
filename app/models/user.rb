@@ -95,8 +95,15 @@ class User < ApplicationRecord
   VALID_PHONE_REGEX = /\A(\+\d{1,3}[- ]?)?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}\z/
   VALID_GENDERS = ['Male', 'Female', 'Prefer not to say', 'Other']
 
+  validate :password_must_differ_from_old, if: -> { @password.present? && password_db.present? }
+
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: URI::MailTo::EMAIL_REGEXP }
+  VALID_EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\.[^@\s]+\z/
+
+  validates :email,
+            presence: true,
+            uniqueness: { case_sensitive: false },
+            format: { with: VALID_EMAIL_REGEX, message: "Invalid email format" }
   validates :password, confirmation: true, if: -> { password.present? }
   validates :phone_number, format: { with: VALID_PHONE_REGEX, message: 'is not a valid phone number' }, allow_blank: true
   validates :gender, inclusion: { in: VALID_GENDERS, message: '%{value} is not a valid gender' }, allow_blank: true
@@ -104,7 +111,6 @@ class User < ApplicationRecord
 
   validate :password_complexity, if: :password_required?
 
-  before_save :downcase_email
   before_save :hash_password, if: -> { @password.present? }
 
   def self.from_omniauth(auth)
@@ -191,6 +197,10 @@ class User < ApplicationRecord
     updated_at > 5.minutes.ago
   end
 
+  def normalize_email
+    self.email = email.to_s.strip.downcase
+  end
+
   def mfa_enabled?
     mfa_credential&.enabled? || false
   end
@@ -216,9 +226,16 @@ class User < ApplicationRecord
     read_attribute(:password)
   end
 
-  def downcase_email
-    self.email = email.downcase if email.present?
+  def password_must_differ_from_old
+    return if password_db.blank? || @password.blank?
+
+    if BCrypt::Password.new(password_db) == @password
+      errors.add(:password, "must be different from your current password")
+    end
+  rescue BCrypt::Errors::InvalidHash
+    # ignore; other validations/auth will handle
   end
+
 
   def hash_password
     write_attribute(:password, BCrypt::Password.create(@password))
