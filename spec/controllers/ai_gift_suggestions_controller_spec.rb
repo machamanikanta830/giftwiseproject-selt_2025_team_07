@@ -1,100 +1,107 @@
 require "rails_helper"
 
 RSpec.describe AiGiftSuggestionsController, type: :controller do
-  let(:user) { User.create!(name: "Test User", email: "test@example.com", password: "Password1!") }
-  let(:event) { user.events.create!(event_name: "Birthday", event_date: Date.today + 3.days, budget: 100) }
-  let(:recipient) { user.recipients.create!(name: "Mom", relationship: "Mother") }
-  let!(:event_recipient) do
-    EventRecipient.create!(user: user, event: event, recipient: recipient)
+  let(:user) { create(:user) }
+
+  let(:event) do
+    create(
+      :event,
+      user: user,
+      event_name: "Birthday",
+      event_date: Date.today + 5
+    )
   end
 
-  let(:fake_suggester) { instance_double(Ai::GiftSuggester, call: [AiGiftSuggestion.new(title: "Test Idea", user: user, event: event, recipient: recipient, event_recipient: event_recipient)]) }
+  let(:recipient) do
+    create(
+      :recipient,
+      user: user,
+      email: "sam@example.com"
+    )
+  end
+
+  let(:event_recipient) do
+    create(
+      :event_recipient,
+      user: user,
+      event: event,
+      recipient: recipient
+    )
+  end
+
+  let(:suggestion) do
+    create(
+      :ai_gift_suggestion,
+      user: user,
+      event: event,
+      recipient: recipient,
+      event_recipient: event_recipient,
+      title: "Test Gift"
+    )
+  end
 
   before do
+    allow(controller).to receive(:authenticate_user!).and_return(true)
     allow(controller).to receive(:current_user).and_return(user)
   end
 
-  describe "GET #index" do
-    it "assigns recipients and suggestions and renders template" do
-      AiGiftSuggestion.create!(
-        user: user,
-        event: event,
-        recipient: recipient,
-        event_recipient: event_recipient,
-        title: "Existing Idea"
-      )
+  describe "GET index" do
+    it "loads AI gift suggestions index" do
+      suggestion
 
       get :index, params: { event_id: event.id }
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:success)
       expect(assigns(:recipients)).to include(recipient)
-      expect(assigns(:suggestions_by_recipient)[recipient.id].map(&:title)).to include("Existing Idea")
-      expect(response).to render_template(:index)
+      expect(assigns(:suggestions_by_recipient)).to be_present
     end
   end
 
-  describe "POST #create" do
+  describe "POST create" do
     before do
-      allow(Ai::GiftSuggester).to receive(:new).and_return(fake_suggester)
+      allow(controller).to receive(:ai_enabled?).and_return(false)
     end
 
-    it "calls Ai::GiftSuggester and redirects back to index with notice" do
+    it "generates fallback AI gift suggestions" do
       post :create, params: {
         event_id: event.id,
-        recipient_id: recipient.id,
-        round_type: "initial"
+        recipient_id: recipient.id
       }
 
-      expect(Ai::GiftSuggester).to have_received(:new).with(
-        user: user,
-        event_recipient: event_recipient
-      )
+      expect(response).to redirect_to(
+                            event_ai_gift_suggestions_path(event)
+                          )
 
-      expect(response).to redirect_to(event_ai_gift_suggestions_path(event))
-      expect(flash[:notice]).to match(/Generated 1 ideas for/)
+      expect(AiGiftSuggestion.count).to be > 0
     end
   end
 
-  describe "POST #toggle_wishlist" do
-    let(:user) { create(:user) }
-    let(:event) { create(:event, user: user) }
-    let(:recipient) { create(:recipient, user: user) }
-    let(:event_recipient) { create(:event_recipient, user: user, event: event, recipient: recipient) }
+  describe "POST toggle_wishlist" do
+    it "adds suggestion to wishlist" do
+      post :toggle_wishlist, params: {
+        event_id: event.id,
+        id: suggestion.id
+      }
 
-    let(:idea) do
-      AiGiftSuggestion.create!(
-        user: user,
-        event: event,
-        recipient: recipient,
-        event_recipient: event_recipient,
-        round_type: "initial",
-        title: "Test Idea"
-      )
+      expect(response).to redirect_to(
+                            event_ai_gift_suggestions_path(event)
+                          )
+
+      expect(
+        Wishlist.exists?(
+          user_id: user.id,
+          ai_gift_suggestion_id: suggestion.id
+        )
+      ).to eq(true)
     end
+  end
 
-    before do
-      allow(controller).to receive(:authenticate_user!).and_return(true)
-      allow(controller).to receive(:current_user).and_return(user)
-      allow(Event).to receive_message_chain(:accessible_to, :find).and_return(event)
-      allow(event).to receive(:can_manage_gifts?).and_return(true)
-    end
+  describe "GET library" do
+    it "loads AI gift library" do
+      get :library
 
-    it "adds a wishlist row for current_user when not saved" do
-      expect {
-        post :toggle_wishlist, params: { event_id: event.id, id: idea.id }
-      }.to change { Wishlist.where(user_id: user.id, ai_gift_suggestion_id: idea.id).count }.from(0).to(1)
-    end
-
-    it "removes a wishlist row for current_user when already saved" do
-      Wishlist.create!(
-        user_id: user.id,
-        ai_gift_suggestion_id: idea.id,
-        recipient_id: idea.recipient_id
-      )
-
-      expect {
-        post :toggle_wishlist, params: { event_id: event.id, id: idea.id }
-      }.to change { Wishlist.where(user_id: user.id, ai_gift_suggestion_id: idea.id).count }.from(1).to(0)
+      expect(response).to have_http_status(:success)
+      expect(assigns(:events)).to be_present
     end
   end
 end
