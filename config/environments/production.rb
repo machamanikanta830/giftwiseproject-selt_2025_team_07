@@ -29,12 +29,12 @@ Rails.application.configure do
   }
 
   config.action_mailer.smtp_settings = {
-    address: 'smtp.sendgrid.net',
-    port: 587,
-    domain: ENV['APP_DOMAIN'] || 'your-app-name.herokuapp.com',
-    user_name: 'apikey',
-    password: ENV['SENDGRID_API_KEY'],
-    authentication: :plain,
-    enable_starttls_auto: true
+    address: 'smtp.resend.com',
+    port: 465,
+    domain: ENV['APP_DOMAIN'] || 'giftwise-chintu-e0dbeab5137d.herokuapp.com',
+    user_name: 'resend',
+    password: ENV['RESEND_API_KEY'],
+    authentication: 'plain',
+    tls: true
   }
 end
