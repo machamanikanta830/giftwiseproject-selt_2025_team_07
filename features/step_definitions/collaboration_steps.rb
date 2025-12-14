@@ -12,15 +12,19 @@ end
 Given("the event {string} has a recipient {string}") do |event_name, recipient_name|
   event = Event.find_by!(event_name: event_name)
 
-  # Use the event owner as the recipient owner (matches your schema user_id is required)
   owner = event.user
+
+  email = "#{recipient_name.downcase.gsub(/[^a-z0-9]+/, '')}@example.com"
 
   recipient = Recipient.create!(
     user: owner,
     name: recipient_name,
-    relationship: "Friend" # <-- REQUIRED by your validation
+    email: email,
+    relationship: "Friend",
+    gender: "Female"
   )
 
+  # Create join row (your schema seems to have user_id on EventRecipient)
   EventRecipient.create!(
     event: event,
     recipient: recipient,

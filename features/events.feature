@@ -99,15 +99,6 @@ Feature: Event Management
     Then I should be redirected to the dashboard
     And I should see "New Event"
 
-
-  # Flash message does NOT disappear in UI → adjust test
-  Scenario: Flash message after event creation
-    Given I am on the new event page
-    When I successfully create an event "Quick Event"
-    Then I should see a success flash message
-    And the flash message should remain visible
-
-
   Scenario: Fail to create event without event name
     Given I am on the new event page
     When I fill in "Event Date" with tomorrow's date

@@ -1,23 +1,40 @@
 # features/step_definitions/ai_gift_suggestions_steps.rb
 
-Given("I have an upcoming event {string} with a recipient {string}") do |event_name, recipient_name|
-  @current_user ||= User.find_by(email: "test@example.com") ||
-                    User.create!(name: "Test User", email: "test@example.com", password: "Password1!")
+def ensure_cuke_user!
+  @user ||= User.find_by(email: "test@example.com") || User.first
+  raise "No @user found for Cucumber. Expected test@example.com to exist." unless @user
+end
 
-  @event = @current_user.events.create!(
+def ensure_test_user!
+  @user = User.find_or_create_by!(email: "test@example.com") do |u|
+    u.name = "Test User"
+    u.password = "Password1!"
+    u.password_confirmation = "Password1!"
+  end
+end
+
+Given("I have an upcoming event {string} with a recipient {string}") do |event_name, recipient_name|
+  ensure_test_user!
+
+  @event = Event.create!(
+    user: @user,
     event_name: event_name,
-    event_date: Date.today + 10.days,
+    event_date: Date.today + 10,
     budget: 100
   )
 
-  @recipient = @current_user.recipients.create!(
+  email = "#{recipient_name.downcase.gsub(/\s+/, '')}@example.com"
+
+  @recipient = Recipient.create!(
+    user: @user,
     name: recipient_name,
+    email: email,
     relationship: "Family",
-    age: 40
+    gender: "Female"
   )
 
   EventRecipient.create!(
-    user: @current_user,
+    user: @user,
     event: @event,
     recipient: @recipient
   )
@@ -169,7 +186,7 @@ Then("I should see {int} AI gift ideas for {string}") do |count, recipient_name|
 end
 
 # Alias for existing step (feature wording mismatch)
-Given("I have an event {string} with a recipient {string}") do |event_name, recipient_name|
+Given("I have an event {string} with a recipient {string} (nodup)") do |event_name, recipient_name|
   step %{I have an upcoming event "#{event_name}" with a recipient "#{recipient_name}"}
 end
 
