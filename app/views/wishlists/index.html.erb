@@ -1,5 +1,4 @@
 <div class="min-h-screen bg-[#f5f5fb] text-gray-900">
-
   <main class="max-w-6xl mx-auto px-6 pt-10 pb-16">
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center gap-4">
@@ -13,7 +12,8 @@
     <% if @wishlist_items.any? %>
       <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         <% @wishlist_items.each do |idea| %>
-          <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
+          <!-- IMPORTANT: ID must use wishlist_id (not idea.id) -->
+          <div id="wishlist_<%= idea.wishlist_id %>" class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
             <% if idea.image_url.present? %>
               <img src="<%= idea.image_url %>"
                    alt="<%= idea.title %>"
@@ -50,23 +50,46 @@
                             event_path(idea.event, from: "wishlist"),
                             class: "text-xs font-medium text-[#a855f7] hover:text-[#9333ea]" %>
 
-                <%= button_to toggle_wishlist_event_ai_gift_suggestion_path(idea.event, idea),
-                              method: :post,
-                              params: { from: "wishlist" },
-                              class: "inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-600",
-                              form: { data: { turbo: "false" } } do %>
-                  <svg xmlns="http://www.w3.org/2000/svg"
-                       viewBox="0 0 24 24"
-                       class="w-4 h-4"
-                       fill="currentColor"
-                       stroke="currentColor"
-                       stroke-width="2"
-                       stroke-linecap="round"
-                       stroke-linejoin="round">
-                    <path d="M20.8 5.5a5.5 5.5 0 0 0-7.8 0L12 6.5l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-6.7 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
-                  </svg>
-                  <span>Remove</span>
-                <% end %>
+                <div class="flex items-center gap-3">
+                  <!-- MOVE TO CART (no redirect, turbo removes card + updates badge) -->
+                  <%= button_to move_to_cart_wishlist_path(idea.wishlist_id),
+                                method: :post,
+                                class: "inline-flex items-center gap-1 text-xs text-gray-700 hover:text-[#a855f7]",
+                                form: { data: { turbo: true } } do %>
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         class="w-4 h-4"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                      <circle cx="9" cy="21" r="1"></circle>
+                      <circle cx="20" cy="21" r="1"></circle>
+                      <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"></path>
+                    </svg>
+                    <span>Move</span>
+                  <% end %>
+
+                  <!-- REMOVE FROM WISHLIST -->
+                  <%= button_to toggle_wishlist_event_ai_gift_suggestion_path(idea.event, idea),
+                                method: :post,
+                                params: { from: "wishlist" },
+                                class: "inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-600",
+                                form: { data: { turbo: "false" } } do %>
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         class="w-4 h-4"
+                         fill="currentColor"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                      <path d="M20.8 5.5a5.5 5.5 0 0 0-7.8 0L12 6.5l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-6.7 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
+                    </svg>
+                    <span>Remove</span>
+                  <% end %>
+                </div>
               </div>
             </div>
           </div>

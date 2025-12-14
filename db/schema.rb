@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_14_074628) do
   create_table "ai_gift_suggestions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "event_id", null: false
@@ -75,6 +75,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
     t.integer "quantity", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "unit_price", precision: 10, scale: 2
     t.index ["ai_gift_suggestion_id"], name: "index_cart_items_on_ai_gift_suggestion_id"
     t.index ["cart_id", "ai_gift_suggestion_id"], name: "index_cart_items_on_cart_id_and_ai_gift_suggestion_id", unique: true
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
@@ -234,6 +235,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
     t.integer "quantity", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "unit_price", precision: 10, scale: 2
     t.index ["ai_gift_suggestion_id"], name: "index_order_items_on_ai_gift_suggestion_id"
     t.index ["event_id"], name: "index_order_items_on_event_id"
     t.index ["order_id"], name: "index_order_items_on_order_id"
@@ -282,6 +284,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id", "email"], name: "index_recipients_on_user_id_and_email", unique: true
     t.index ["user_id"], name: "index_recipients_on_user_id"
   end
 

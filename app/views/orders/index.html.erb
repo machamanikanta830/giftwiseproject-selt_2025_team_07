@@ -73,6 +73,18 @@
               <p class="text-xs text-gray-400 mt-1">
                 <%= pluralize(order.order_items.count, "item") %>
               </p>
+
+              <% order_total =
+                   order.order_items.sum do |it|
+                     it.unit_price.present? ? (it.unit_price * it.quantity) : 0
+                   end %>
+
+              <p class="text-xs text-gray-500 mt-1">
+                Total: <span class="font-semibold text-gray-900"><%= number_to_currency(order_total) %></span>
+              </p>
+
+
+
             </div>
 
             <%= link_to "View",
