@@ -1,11 +1,7 @@
-# frozen_string_literal: true
-
 class CollaboratorsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_event
 
-  # POST /events/:event_id/collaborators
-  # Supports inviting by friend_id OR email
   def create
     unless @event.owner?(current_user)
       redirect_to dashboard_path, alert: "Only the event owner can invite collaborators."
@@ -24,7 +20,6 @@ class CollaboratorsController < ApplicationController
         User.find_by("LOWER(email) = ?", email)
       end
 
-    # --- Case A: invited user exists -> in-app collaborator request ---
     if invited_user
       if @event.collaborators.exists?(user_id: invited_user.id)
         redirect_to event_path(@event), alert: "That user is already a collaborator."
@@ -37,23 +32,21 @@ class CollaboratorsController < ApplicationController
         status: Collaborator::STATUS_PENDING
       )
 
-      redirect_to event_path(@event), notice: "#{invited_user.name} has been invited."
+      redirect_to event_path(@event), notice: "#{invited_user.name} has been invited (in-app notification)."
       return
     end
 
-    # --- Case B: email not found -> create CollaborationInvite for email sending ---
     if email.blank?
       redirect_to event_path(@event), alert: "Please provide an email or select a friend."
       return
     end
 
-    # avoid duplicate pending invites to same email for same event
     if CollaborationInvite.exists?(event: @event, invitee_email: email, status: "pending")
       redirect_to event_path(@event), alert: "An invite is already pending for #{email}."
       return
     end
 
-    CollaborationInvite.create!(
+    invite = CollaborationInvite.create!(
       event: @event,
       inviter: current_user,
       invitee_email: email,
@@ -63,13 +56,11 @@ class CollaboratorsController < ApplicationController
       expires_at: 14.days.from_now
     )
 
-    # Your teammate will hook mail sending here later:
-    # InviteMailer.collaboration_invite(invite).deliver_later
+    CollaborationInviteMailer.invite_email(invite).deliver_later
 
     redirect_to event_path(@event), notice: "Invite email sent to #{email}."
   end
 
-  # PATCH /events/:event_id/collaborators/:id
   def update
     collaborator = @event.collaborators.find(params[:id])
 
@@ -80,7 +71,6 @@ class CollaboratorsController < ApplicationController
     end
   end
 
-  # DELETE /events/:event_id/collaborators/:id
   def destroy
     collaborator = @event.collaborators.find(params[:id])
     name = collaborator.user.name
@@ -90,9 +80,6 @@ class CollaboratorsController < ApplicationController
 
   private
 
-  # IMPORTANT:
-  # - For create, use Event.all so we don't 404 before permission check
-  # - For update/destroy, keep accessible_to
   def set_event
     scope = action_name == "create" ? Event.all : Event.accessible_to(current_user)
     @event = scope.find(params[:event_id])

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CollaborationInvite < ApplicationRecord
   belongs_to :event
   belongs_to :inviter, class_name: "User"
@@ -11,6 +9,26 @@ class CollaborationInvite < ApplicationRecord
 
   before_validation :normalize_email
   before_validation :ensure_token, on: :create
+
+  scope :pending, -> { where(status: "pending") }
+  scope :accepted, -> { where(status: "accepted") }
+  scope :expired, -> { where("expires_at < ?", Time.current) }
+
+  def pending?
+    status == "pending"
+  end
+
+  def accepted?
+    status == "accepted"
+  end
+
+  def expired?
+    expires_at.present? && expires_at < Time.current
+  end
+
+  def role_label
+    role == Collaborator::ROLE_CO_PLANNER ? "Co-Planner" : "Viewer"
+  end
 
   private
 
