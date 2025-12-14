@@ -8,11 +8,20 @@ RSpec.describe AiGiftSuggestionsController, type: :request do
   let(:event) { user.events.create!(event_name: "Birthday", event_date: Date.today) }
 
   let(:recipient) do
-    user.recipients.create!(name: "Sam", relationship: "Friend")
+    user.recipients.create!(
+      name: "Sam",
+      relationship: "Friend",
+      email: "sam@example.com"
+    )
   end
 
   let!(:event_recipient) do
-    EventRecipient.create!(user: user, event: event, recipient: recipient)
+    Recipient.create!(
+      name: "Sam",
+      relationship: "Friend",
+      user: user,
+      email: "sam@example.com"
+    )
   end
 
   before do
