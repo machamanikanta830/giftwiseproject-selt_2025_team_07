@@ -90,3 +90,5 @@ gem 'omniauth-rails_csrf_protection'
 gem 'dotenv-rails', groups: [:development, :test]
 
 gem "activerecord-session_store"
+
+gem "redis", "~> 5.0"
