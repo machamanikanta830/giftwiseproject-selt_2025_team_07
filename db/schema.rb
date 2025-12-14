@@ -51,7 +51,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_13_063334) do
     t.string "uid"
     t.string "email"
     t.string "name"
-    t.string "avatar_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_authentications_on_user_id"
@@ -66,6 +65,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_13_063334) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "code_digest"], name: "index_backup_codes_on_user_id_and_code_digest", unique: true
     t.index ["user_id"], name: "index_backup_codes_on_user_id"
+  end
+
   create_table "cart_items", force: :cascade do |t|
     t.integer "cart_id", null: false
     t.integer "ai_gift_suggestion_id", null: false
@@ -256,11 +257,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_13_063334) do
 
   create_table "password_reset_tokens", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.string "token"
-    t.datetime "expires_at"
-    t.boolean "used"
+    t.string "token", null: false
+    t.datetime "expires_at", null: false
+    t.boolean "used", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_password_reset_tokens_on_token", unique: true
     t.index ["user_id"], name: "index_password_reset_tokens_on_user_id"
   end
 
