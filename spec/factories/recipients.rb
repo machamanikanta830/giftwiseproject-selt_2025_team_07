@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :recipient do
     association :user
     name { "Sam" }
-    email { "sam@example.com" }
+    sequence(:email) { |n| "recipient#{n}@example.com" }
     relationship { "Friend" }
     age { 25 }
     gender { "Other" }

@@ -4,14 +4,14 @@
 This implementation adds a complete friend system and real-time direct messaging to GiftWise.
 
 ## Features
-✅ Friend requests (send, accept, reject)
-✅ Friends list management
-✅ Real-time chat with Action Cable
-✅ Online/offline status indicators
-✅ Unread message counters
-✅ Chat icon in bottom-left corner
-✅ Instagram-style message notifications
-✅ Message read receipts
+  Friend requests (send, accept, reject)
+  Friends list management
+  Real-time chat with Action Cable
+  Online/offline status indicators
+  Unread message counters
+  Chat icon in bottom-left corner
+  Instagram-style message notifications
+  Message read receipts
 
 ---
 
@@ -215,7 +215,7 @@ rails server
 
 ---
 
-## 🧪 Testing Checklist
+##    Testing Checklist
 
 ### Friend System
 - [ ] Navigate to `/friendships`
@@ -385,7 +385,7 @@ Create Conversation model with many-to-many users
 
 ---
 
-## ✅ Completion Checklist
+##   Completion Checklist
 
 - [ ] Migration created and run
 - [ ] All models installed

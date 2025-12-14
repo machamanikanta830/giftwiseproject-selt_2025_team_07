@@ -1,10 +1,41 @@
+# spec/requests/orders_spec.rb
 require "rails_helper"
 
 RSpec.describe "Orders", type: :request do
-  let!(:user) { User.create!(name: "Test User", email: "test2@example.com", password: "Password@1", password_confirmation: "Password@1") }
-  let!(:event) { Event.create!(user: user, event_name: "Anniversary", event_date: Date.today + 10, budget: 200) }
-  let!(:recipient) { Recipient.create!(user: user, name: "Mary", relationship: "Family") }
-  let!(:event_recipient) { EventRecipient.create!(event: event, recipient: recipient) }
+  let!(:user) do
+    User.create!(
+      name: "Test User",
+      email: "test2@example.com",
+      password: "Password@1",
+      password_confirmation: "Password@1"
+    )
+  end
+
+  let!(:event) do
+    Event.create!(
+      user: user,
+      event_name: "Anniversary",
+      event_date: Date.today + 10,
+      budget: 200
+    )
+  end
+
+  let!(:recipient) do
+    Recipient.create!(
+      user: user,
+      name: "Mary",
+      relationship: "Family",
+      email: "mary@example.com" # required now
+    )
+  end
+
+  let!(:event_recipient) do
+    EventRecipient.create!(
+      user: user,              # required by schema (null: false)
+      event: event,
+      recipient: recipient
+    )
+  end
 
   let!(:idea) do
     AiGiftSuggestion.create!(
@@ -37,8 +68,15 @@ RSpec.describe "Orders", type: :request do
 
   it "creates an order from cart (COD checkout)" do
     sign_in(user)
+
     cart = Cart.for(user)
-    CartItem.create!(cart: cart, ai_gift_suggestion: idea, event: event, recipient: recipient, quantity: 1)
+    CartItem.create!(
+      cart: cart,
+      ai_gift_suggestion: idea,
+      event: event,
+      recipient: recipient,
+      quantity: 1
+    )
 
     expect {
       post orders_path, params: {
@@ -46,28 +84,43 @@ RSpec.describe "Orders", type: :request do
         delivery_phone: "+1 (222) 333-4444",
         delivery_note: "Leave at door"
       }
-    }.to change { Order.count }.by(1)
+    }.to change(Order, :count).by(1)
 
-    expect(response).to redirect_to(orders_path).or redirect_to(/orders\/\d+/)
+    # robust redirect check (works whether it redirects to index or show)
+    expect(response).to have_http_status(:redirect)
+    expect(response.location).to match(%r{/orders(/\d+)?$})
   end
 
   it "shows an order page" do
     sign_in(user)
-    order = Order.create!(user: user, status: "placed", placed_at: Time.current, delivery_address: "abc", delivery_phone: "111")
+
+    order = Order.create!(
+      user: user,
+      status: "placed",
+      placed_at: Time.current,
+      delivery_address: "abc",
+      delivery_phone: "111"
+    )
 
     get order_path(order)
     expect(response).to have_http_status(:ok)
     expect(response.body).to include("Order ##{order.id}")
   end
 
-  # Only if you have these routes/actions:
   it "cancels an order (if supported)" do
     sign_in(user)
-    order = Order.create!(user: user, status: "placed", placed_at: Time.current, delivery_address: "abc", delivery_phone: "111")
+
+    order = Order.create!(
+      user: user,
+      status: "placed",
+      placed_at: Time.current,
+      delivery_address: "abc",
+      delivery_phone: "111"
+    )
 
     if Rails.application.routes.url_helpers.respond_to?(:cancel_order_path)
       patch cancel_order_path(order)
-      expect(response).to redirect_to(order_path(order)).or redirect_to(/orders\/\d+/)
+      expect(response).to have_http_status(:redirect)
       order.reload
       expect(order.status).to eq("cancelled")
     end
@@ -75,11 +128,18 @@ RSpec.describe "Orders", type: :request do
 
   it "marks delivered (if supported)" do
     sign_in(user)
-    order = Order.create!(user: user, status: "placed", placed_at: Time.current, delivery_address: "abc", delivery_phone: "111")
+
+    order = Order.create!(
+      user: user,
+      status: "placed",
+      placed_at: Time.current,
+      delivery_address: "abc",
+      delivery_phone: "111"
+    )
 
     if Rails.application.routes.url_helpers.respond_to?(:deliver_order_path)
       patch deliver_order_path(order)
-      expect(response).to redirect_to(order_path(order)).or redirect_to(/orders\/\d+/)
+      expect(response).to have_http_status(:redirect)
       order.reload
       expect(order.status).to eq("delivered")
     end

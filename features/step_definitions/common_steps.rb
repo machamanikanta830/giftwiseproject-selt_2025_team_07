@@ -8,3 +8,6 @@ Then('I should not see {string}') do |text|
   expect(page).not_to have_content(text)
 end
 
+When('I press {string}') do |label|
+  click_link_or_button(label, match: :first)
+end

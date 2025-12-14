@@ -9,16 +9,16 @@ export default class extends Controller {
     static targets = ["form"]
 
     connect() {
-        console.log("🟢 Chat controller connected!")
-        console.log("👤 Current User ID:", this.userIdValue)
-        console.log("👥 Friend ID:", this.friendIdValue)
+        console.log("   Chat controller connected!")
+        console.log(" Current User ID:", this.userIdValue)
+        console.log("   Friend ID:", this.friendIdValue)
 
         this.scrollToBottom()
         this.setupActionCable()
     }
 
     disconnect() {
-        console.log("🔴 Chat controller disconnecting...")
+        console.log("   Chat controller disconnecting...")
         if (this.subscription) {
             this.subscription.unsubscribe()
         }
@@ -32,12 +32,12 @@ export default class extends Controller {
             { channel: "ChatChannel" },
             {
                 connected: () => {
-                    console.log("✅ Connected to ChatChannel!")
+                    console.log("  Connected to ChatChannel!")
                     console.log("🎧 Listening for messages...")
                 },
 
                 disconnected: () => {
-                    console.log("❌ Disconnected from ChatChannel")
+                    console.log("   Disconnected from ChatChannel")
                 },
 
                 received: (data) => {
@@ -47,7 +47,7 @@ export default class extends Controller {
 
                     // Only append message if it's from the friend we're chatting with
                     if (data.sender_id === this.friendIdValue) {
-                        console.log("✅ Message is from current friend, appending to chat...")
+                        console.log("  Message is from current friend, appending to chat...")
                         this.appendMessage(data.message)
                         this.scrollToBottom()
                     } else {
@@ -63,13 +63,13 @@ export default class extends Controller {
 
         const messagesContainer = document.getElementById("messages")
         if (!messagesContainer) {
-            console.error("❌ Messages container not found!")
+            console.error("   Messages container not found!")
             return
         }
 
         const messageHtml = this.createMessageElement(message)
         messagesContainer.insertAdjacentHTML('beforeend', messageHtml)
-        console.log("✅ Message appended successfully!")
+        console.log("  Message appended successfully!")
     }
 
     createMessageElement(message) {

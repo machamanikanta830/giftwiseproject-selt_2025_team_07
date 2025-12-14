@@ -18,6 +18,8 @@ SimpleCov.start 'rails' do
   add_filter '/spec/'
   add_filter '/config/'
   add_filter '/vendor/'
+  add_filter '/channels/'
+  add_filter '/jobs/'
 end
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

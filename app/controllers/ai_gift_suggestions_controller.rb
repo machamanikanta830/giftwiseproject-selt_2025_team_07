@@ -41,12 +41,6 @@ class AiGiftSuggestionsController < ApplicationController
       ideas = []
     end
 
-    # Extra safety: if AI returns nothing, still create stub ideas
-    begin
-      ideas = suggester.call(round_type: round_type)
-    rescue Ai::GeminiClient::Error
-      ideas = []
-    end
 
     if ideas.blank? && (Rails.env.test? || Rails.env.development?)
       ideas = generate_test_stub_ideas(@event_recipient, round_type)

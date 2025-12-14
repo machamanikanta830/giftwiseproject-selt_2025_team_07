@@ -46,7 +46,7 @@
             <%= button_to clear_messages_path(friend_id: @friend.id),
                           method: :delete,
                           data: {
-                            turbo_confirm: "⚠️ Are you sure you want to clear all messages with #{@friend.name}?\n\nThis will only clear the chat from YOUR view. #{@friend.name} will still see all messages.",
+                            turbo_confirm: "   Are you sure you want to clear all messages with #{@friend.name}?\n\nThis will only clear the chat from YOUR view. #{@friend.name} will still see all messages.",
                             turbo_method: :delete
                           },
                           class: "p-2 rounded-full bg-white/10 hover:bg-white/20 transition",

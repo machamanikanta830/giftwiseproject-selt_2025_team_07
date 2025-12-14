@@ -5,8 +5,15 @@ RSpec.describe "Cart", type: :request do
 
   # minimal event/recipient/idea
   let!(:event) { Event.create!(user: user, event_name: "Birthday", event_date: Date.today + 5, budget: 100) }
-  let!(:recipient) { Recipient.create!(user: user, name: "John", relationship: "Friend") }
-  let!(:event_recipient) { EventRecipient.create!(event: event, recipient: recipient) }
+  let!(:recipient) do
+    Recipient.create!(
+      user: user,
+      name: "John",
+      relationship: "Friend",
+      email: "john@example.com"
+    )
+  end
+  let!(:event_recipient) { EventRecipient.create!(user: user, event: event, recipient: recipient) }
 
   let!(:idea) do
     AiGiftSuggestion.create!(

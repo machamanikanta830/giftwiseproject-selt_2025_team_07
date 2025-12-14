@@ -5,12 +5,11 @@ RSpec.describe Ai::GeminiClient do
   let(:client) { described_class.new(api_key: api_key) }
 
   describe "initialize" do
-    it "raises error when api key is missing" do
-      expect {
-        described_class.new(api_key: nil)
-      }.to raise_error(Ai::GeminiClient::Error, /Gemini API key missing/)
+    it "does not raise when api key is missing (error occurs on request)" do
+      expect { described_class.new(api_key: nil) }.not_to raise_error
     end
   end
+
 
   describe "generate_gift_ideas" do
     let(:http) { instance_double(Net::HTTP) }

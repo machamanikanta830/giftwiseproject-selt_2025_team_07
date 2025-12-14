@@ -12,7 +12,8 @@ RSpec.describe GiftIdeasController, type: :request do
   let(:recipient) do
     user.recipients.create!(
       name: "Sam",
-      relationship: "Friend"
+      relationship: "Friend",
+      email: "sam-#{SecureRandom.hex(6)}@example.com"
     )
   end
 
