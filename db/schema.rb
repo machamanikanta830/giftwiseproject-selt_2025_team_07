@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_14_050401) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_14_053728) do
   create_table "ai_gift_suggestions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "event_id", null: false
@@ -293,6 +293,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_14_050401) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "email"], name: "index_recipients_on_user_id_and_email", unique: true
     t.index ["user_id"], name: "index_recipients_on_user_id"
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.string "session_id", null: false
+    t.text "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
+    t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
   create_table "users", force: :cascade do |t|
