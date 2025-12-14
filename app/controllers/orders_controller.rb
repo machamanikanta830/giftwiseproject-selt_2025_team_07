@@ -43,9 +43,9 @@ class OrdersController < ApplicationController
       delivery_phone: params[:delivery_phone].to_s.strip.presence,
       delivery_note: params[:delivery_note].to_s.strip.presence
     )
-
     items.each do |ci|
       s = ci.ai_gift_suggestion
+
       order.order_items.create!(
         ai_gift_suggestion: s,
         recipient_id: ci.recipient_id,
@@ -54,10 +54,12 @@ class OrdersController < ApplicationController
         title: s.title,
         description: s.description,
         estimated_price: s.estimated_price,
+        unit_price: ci.unit_price,          # ✅ NEW (numeric)
         category: s.category,
         image_url: s.image_url
       )
     end
+
 
     cart.cart_items.delete_all
 
